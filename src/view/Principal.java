@@ -55,6 +55,11 @@ public class Principal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         Desktop = new javax.swing.JDesktopPane();
         jPanel2 = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -71,8 +76,9 @@ public class Principal extends javax.swing.JFrame {
         pn_fundo.setBackground(new java.awt.Color(0, 0, 0));
         pn_fundo.setPreferredSize(new java.awt.Dimension(1280, 720));
 
-        pn_superior.setBackground(new java.awt.Color(153, 153, 153));
+        pn_superior.setBackground(new java.awt.Color(30, 30, 30));
 
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Info - Variaveis");
         jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -98,8 +104,9 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pn_lateral_esquerdo.setBackground(new java.awt.Color(153, 153, 153));
+        pn_lateral_esquerdo.setBackground(new java.awt.Color(30, 30, 30));
 
+        tree_produto.setBackground(new java.awt.Color(30, 30, 30));
         tree_produto.setBorder(new MatteBorder(2, 2, 2, 2, Color.BLACK)
         );
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Árvore");
@@ -126,14 +133,15 @@ public class Principal extends javax.swing.JFrame {
         );
         pn_lateral_esquerdoLayout.setVerticalGroup(
             pn_lateral_esquerdoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        pn_inferior.setBackground(new java.awt.Color(153, 153, 153));
+        pn_inferior.setBackground(new java.awt.Color(30, 30, 30));
 
-        jPanel3.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel3.setBackground(new java.awt.Color(30, 30, 30));
 
         lbl_frame_open.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lbl_frame_open.setForeground(new java.awt.Color(255, 255, 255));
         lbl_frame_open.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_frame_open.setText("Nenhum arquivo em uso");
 
@@ -185,7 +193,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_horario, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(19, 19, 19))
         );
         pn_inferiorLayout.setVerticalGroup(
             pn_inferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -193,9 +201,10 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_inferiorLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_horario, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addGap(16, 16, 16))
         );
 
+        Desktop.setBackground(new java.awt.Color(30, 30, 30));
         Desktop.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 DesktopComponentResized(evt);
@@ -213,7 +222,7 @@ public class Principal extends javax.swing.JFrame {
         );
         DesktopLayout.setVerticalGroup(
             DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 602, Short.MAX_VALUE)
+            .addGap(0, 579, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -227,7 +236,7 @@ public class Principal extends javax.swing.JFrame {
             .addComponent(Desktop)
         );
 
-        jPanel2.setBackground(new java.awt.Color(153, 153, 153));
+        jPanel2.setBackground(new java.awt.Color(30, 30, 30));
         jPanel2.setPreferredSize(new java.awt.Dimension(100, 30));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -267,6 +276,22 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(pn_inferior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        jMenu1.setText("Preferências");
+
+        jMenu3.setText("Tema");
+
+        jMenuItem1.setText("jMenuItem1");
+        jMenu3.add(jMenuItem1);
+
+        jMenu1.add(jMenu3);
+
+        jMenuItem2.setText("Imprimir Tabela");
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -275,7 +300,7 @@ public class Principal extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pn_fundo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pn_fundo, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
         );
 
         setSize(new java.awt.Dimension(1294, 727));
@@ -376,6 +401,11 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JDesktopPane Desktop;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

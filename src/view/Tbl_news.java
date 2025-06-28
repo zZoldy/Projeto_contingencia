@@ -5,6 +5,7 @@
 package view;
 
 import controller.C_tbl_news;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import model.Table;
@@ -68,6 +70,8 @@ public class Tbl_news extends javax.swing.JInternalFrame {
                 }
             }
         });
+
+        jScrollPane1.getViewport().setBackground(new Color(100, 100, 100));
     }
 
     /**
@@ -83,6 +87,7 @@ public class Tbl_news extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_news = new javax.swing.JTable();
 
+        setBackground(new java.awt.Color(30, 30, 30));
         addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
             public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
             }
@@ -180,6 +185,10 @@ public class Tbl_news extends javax.swing.JInternalFrame {
                 return;
             }
             controller.lauda.lauda(tbl_news, pn_fundo);
+        }
+
+        if (info.get(1).equals("Formato")) {
+            JOptionPane.showMessageDialog(null, "Tabela não permite digitação!", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
 
     }//GEN-LAST:event_tbl_newsKeyPressed

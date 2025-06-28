@@ -113,7 +113,10 @@ public class Tree {
                 } else {
                     System.out.println("Arquivo: " + file.getName());
                     Arquivo arq_file = new Arquivo(file.getPath(), file);
-                    raizNode.adicionar_filho(new NodeTree(file.getName(), true, arq_file));
+
+                    String nomeSemExtensao = file.getName().replaceFirst("[.][^.]+$", "");
+                    raizNode.adicionar_filho(new NodeTree(nomeSemExtensao, true, arq_file));
+
                 }
             }
         }
@@ -180,6 +183,12 @@ public class Tree {
 
         tree.setModel(new DefaultTreeModel(rootNode));
         tree.setCellRenderer(new CustomTreeRenderer());
+        tree.setUI(new javax.swing.plaf.basic.BasicTreeUI() {
+            protected boolean isLocationInExpandControl(int row, int rowLevel, int x, int y) {
+                return false; // Permite que qualquer clique na linha seja tratado como clique no nó
+            }
+        });
+
         return tree.getModel();
     }
 

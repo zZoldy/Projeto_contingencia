@@ -100,14 +100,7 @@ public class C_principal {
             if (!jInternal) {
                 tree.setProcess_tree(node_select);
                 if (tree.getProcess_tree().isArquivo()) {
-
                     init_frame();
-
-                    String produto = new File(tree.getProcess_tree().getArquivo().getFile().getParent()).getName();
-                    String arquivo = tree.getProcess_tree().getArquivo().getFile().getName().replaceFirst("[.][^.]+$", "");
-
-                    view.lbl_frame_open.setText(arquivo + "-" + produto);
-
                 }
             }
         } else {
@@ -157,23 +150,9 @@ public class C_principal {
         }
 
         tree.getProcess_tree().getArquivo().setFile(recover);
-        String produto = new File(recover.getParent()).getName();
-        String arquivo = recover.getName().replaceFirst("[.][^.]+$", "");
 
-        view.lbl_frame_open.setText(arquivo + "-" + produto + ": OPEN");
-        List<String> info_table = new ArrayList<>();
-
-        String produto_info = new File(recover.getParent()).getName();
-        String arquivo_info = recover.getName().replaceFirst("[.][^.]+$", "");
-        tbl_news.controller.lauda = new Lauda(produto_info, arquivo_info);
-
-        info_table.add(produto_info);
-        info_table.add(arquivo_info);
-
-        tbl_news.info = info_table;
-        System.out.println(tbl_news.info.get(0));
-        System.out.println(tbl_news.info.get(1));
-
+        info_file_init_frame();
+        
         view.lbl_close.setVisible(true);
         view.lbl_close.setText("Clique para fechar");
 
@@ -181,6 +160,21 @@ public class C_principal {
 
         jInternal = true;
 
+    }
+
+    void info_file_init_frame() {
+
+        List<String> info_table = new ArrayList<>();
+
+        String produto_info = new File(tree.getProcess_tree().getArquivo().getFile().getParent()).getName();
+        String arquivo_info = tree.getProcess_tree().getArquivo().getFile().getName().replaceFirst("[.][^.]+$", "");
+        view.lbl_frame_open.setText(produto_info + "-" + arquivo_info);
+        tbl_news.controller.lauda = new Lauda(produto_info, arquivo_info);
+
+        info_table.add(produto_info);
+        info_table.add(arquivo_info);
+
+        tbl_news.info = info_table;
     }
 
     public void init_frame() {
@@ -197,16 +191,7 @@ public class C_principal {
                 return;
             }
 
-            List<String> info_table = new ArrayList<>();
-
-            String produto_info = new File(tree.getProcess_tree().getArquivo().getFile().getParent()).getName();
-            String arquivo_info = tree.getProcess_tree().getArquivo().getFile().getName().replaceFirst("[.][^.]+$", "");
-            tbl_news.controller.lauda = new Lauda(produto_info, arquivo_info);
-
-            info_table.add(produto_info);
-            info_table.add(arquivo_info);
-
-            tbl_news.info = info_table;
+            info_file_init_frame();
 
             view.Desktop.add(tbl_news);
 

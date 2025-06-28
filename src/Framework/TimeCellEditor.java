@@ -57,20 +57,42 @@ public class TimeCellEditor extends DefaultCellEditor {
         String clean = txt.replace(' ', '0');   // “  :  ” → “00:00”
         String[] p = txt.split(":");
 
-        int m = p.length > 0 ? Funcoes.parseSafe(p[0]) : 0;
-        int s = p.length > 1 ? Funcoes.parseSafe(p[1]) : 0;
+        if (p.length == 2) {
+            int m = p.length > 0 ? Funcoes.parseSafe(p[0]) : 0;
+            int s = p.length > 1 ? Funcoes.parseSafe(p[1]) : 0;
+            if (m > 59) {
+                m = 59;
+            }
 
-        if (m > 59) {
-            m = 59;
-        }
-        if (s > 59) {
-            s = 59;
+            if (s > 59) {
+                s = 59;
+            }
+
+            return String.format("%02d:%02d", m, s);
         }
 
-        return String.format("%02d:%02d", m, s);
+        if (p.length == 3) {
+            int h = p.length > 0 ? Funcoes.parseSafe(p[0]) : 0;
+            int m = p.length > 1 ? Funcoes.parseSafe(p[1]) : 0;
+            int s = p.length > 2 ? Funcoes.parseSafe(p[2]) : 0;
+
+            if (h > 23) {
+                h = 23;
+            }
+
+            if (m > 59) {
+                m = 59;
+            }
+
+            if (s > 59) {
+                s = 59;
+            }
+
+            return String.format("%02d:%02d:%02d", h, m, s);
+        }
+
+        return "00:00";
     }
-
-
 
     /*────────────────────  JTable hooks  ────────────────────*/
     @Override

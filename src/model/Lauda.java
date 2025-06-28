@@ -176,52 +176,32 @@ public class Lauda {
             // Posição visível da viewport dentro da JTable
             Rectangle visibleRect = viewport.getViewRect();
 
-            int lastVisibleRow = table.rowAtPoint(new Point(0, visibleRect.y + visibleRect.height - 1));
-
-            System.out.println("Select: " + select);
-            System.out.println("LastSelect: " + (lastVisibleRow - 10));
-            if (select >= lastVisibleRow / 2) {
-                System.out.println("Ultima linha selecionada");
-
-                // Força o split no meio do painel
-                int alturaTotal = externo.getHeight();
-                if (alturaTotal == 0) {
-                    splitPane.validate();
-                    alturaTotal = externo.getHeight();
-                }
-                int divisor = alturaTotal / 2;
-                splitPane.setDividerLocation(divisor);
-
-                SwingUtilities.invokeLater(() -> {
-                    Rectangle rect = table.getCellRect(select, 0, true);
-                    if (rect != null) {
-                        JViewport viewport2 = (JViewport) table.getParent();
-
-                        // Calcula o ponto de rolagem para alinhar a linha selecionada logo acima do divisor
-                        int deslocamentoY = divisor - rect.height;
-                        int novaY = rect.y - deslocamentoY + 45;
-                        System.out.println("N: " + novaY);
-
-                        if (novaY < 0) {
-                            novaY = 0; // Evita scroll negativo
-                        }
-                        viewport2.setViewPosition(new Point(rect.x, novaY));
-                    }
-                });
-
-            } else {
-                // Converte a posição para o componente pai do splitPane (pn_fundo)
-                Point pontoConvertido = SwingUtilities.convertPoint(
-                        externo, // origem
-                        new Point(0, linhaAbaixoY), // ponto dentro da JTable
-                        splitPane // destino
-                );
-
-                int yConvertido = pontoConvertido.y;
-                // Aqui faz o cálculo do divisor usando alturaTotal já válida
-                // ... (seu código de ajuste do divisor)
-                splitPane.setDividerLocation(yConvertido + 25);
+            // Força o split no meio do painel
+            int alturaTotal = externo.getHeight();
+            if (alturaTotal == 0) {
+                splitPane.validate();
+                alturaTotal = externo.getHeight();
             }
+            int divisor = alturaTotal / 2;
+            splitPane.setDividerLocation(divisor);
+
+            SwingUtilities.invokeLater(() -> {
+                Rectangle rect = table.getCellRect(select, 0, true);
+                if (rect != null) {
+                    JViewport viewport2 = (JViewport) table.getParent();
+
+                    // Calcula o ponto de rolagem para alinhar a linha selecionada logo acima do divisor
+                    int deslocamentoY = divisor - rect.height;
+                    int novaY = rect.y - deslocamentoY + 45;
+                    System.out.println("N: " + novaY);
+
+                    if (novaY < 0) {
+                        novaY = 0; // Evita scroll negativo
+                    }
+                    viewport2.setViewPosition(new Point(rect.x, novaY));
+                }
+            });
+
         }
 
         // Adiciona no painel principal
@@ -231,6 +211,7 @@ public class Lauda {
         externo.revalidate();
         externo.repaint();
 
+        table.repaint();
         table.requestFocusInWindow();
     }
 
