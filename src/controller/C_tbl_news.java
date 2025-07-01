@@ -5,6 +5,7 @@
 package controller;
 
 import Framework.Funcoes;
+import Listener.Tempo_producao_listener;
 import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
@@ -34,9 +35,20 @@ public class C_tbl_news {
     Tbl_news view;
     public File arquivo;
     public Lauda lauda;
+    public String tempo_producao;
+    private Tempo_producao_listener listener;
 
     public C_tbl_news(Tbl_news view) {
         this.view = view;
+    }
+
+    public void setTempoProducaoListener(Tempo_producao_listener listener) {
+        this.listener = listener;
+    }
+    
+    public String getTempoProducaoListener(){
+        tempo_producao = (String) view.tbl_news.getValueAt(0, 13);
+        return tempo_producao;
     }
 
     public void in_celula(JTable tabela) {
@@ -197,6 +209,7 @@ public class C_tbl_news {
         Table.linhasComErroDeTempo = novasLinhasErro;
         String line_erro_file = "LinhasComErro_" + view.info.get(0) + "_" + view.info.get(1);
         StringBuilder lines = builder_linhas();
+        
         C_principal.config = Funcoes.salvarConfiguracao(line_erro_file, lines.toString());
 
         ajustar_largura_colunas(view.tbl_news);
@@ -245,7 +258,7 @@ public class C_tbl_news {
             }
         }
     }
-    
+
     public void ver_lauda(int rowSelect) {
         List<File> arquivosTxt = lauda.list_laudas();
         try {
@@ -389,7 +402,27 @@ public class C_tbl_news {
         calc_tempo_anterior = "00:00:00";
     }
 
+    public String add_tempo_producao(JTable table) {
+        int linha = table.getSelectedRow();
+        int coluna = table.getSelectedColumn();
+
+        if (linha == 0 && coluna == 13) {
+            String valor = (String) table.getValueAt(linha, coluna);
+            if (valor != null) {
+                this.tempo_producao = valor;
+
+                // Notifica o ouvinte (o JFrame Principal)
+                if (listener != null) {
+                    listener.onTempoProducaoAtualizado(valor);
+                }
+
+                return tempo_producao;
+            }
+        }
+        return "";
+    }
     // Função auxiliar para parsing de mm:ss
+
     private int[] parseMinSec(Object val) {
         if (val == null || val.toString().isEmpty()) {
             return new int[]{0, 0};

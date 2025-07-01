@@ -200,6 +200,7 @@ public class Tbl_news extends javax.swing.JInternalFrame {
 
     private void tbl_newsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_newsKeyReleased
         // TODO add your handling code here:
+        controller.add_tempo_producao(tbl_news);
         controller.add_tempo(tbl_news);
     }//GEN-LAST:event_tbl_newsKeyReleased
 

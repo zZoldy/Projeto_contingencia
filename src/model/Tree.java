@@ -150,6 +150,7 @@ public class Tree {
         }
 
         for (File pasta : subpastas) {
+            System.out.println("PASTA: " + pasta.getName());
             for (String nomeArquivo : arquivosCsv) {
                 File csv = new File(pasta, nomeArquivo);
                 if (!csv.exists()) {
@@ -158,12 +159,12 @@ public class Tree {
                         if (criado) {
                             System.out.println("Arquivo criado: " + csv.getPath());
                             if (nomeArquivo.equals("Formato.csv")) {
-                                Formato format = new Formato(csv.getPath());
+                                Formato format = new Formato(csv.getPath(), pasta.getName());
 
                             } else if (nomeArquivo.equals("Prelim.csv")) {
-                                Final model_final = new Final(csv.getPath());
+                                Final model_final = new Final(csv.getPath(), pasta.getName());
                             } else if (nomeArquivo.equals("Final.csv")) {
-                                Prelim prelim = new Prelim(csv.getPath());
+                                Prelim prelim = new Prelim(csv.getPath(), pasta.getName());
                             }
                         }
                     } catch (IOException e) {

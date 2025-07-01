@@ -15,7 +15,8 @@ import java.util.List;
 public class Formato {
 
     String[] colunas = {"PG", "EDICAO", "TIPO", "SUBTIPO", "ORIGEM", "RETRANCA", "REP", "LOC", "tCab", "tVT", "tMat", "MODI", "APV", "TEMPO", "ASSUNTO"};
-    List<String[]> linhas = linhas_format();
+    List<String[]> linhas;
+    String produto;
 
     public List<String[]> linhas_format() {
         List<String[]> l = new ArrayList<>();
@@ -25,7 +26,7 @@ public class Formato {
 
             switch (c) {
                 case 0:
-                    l.add(new String[]{String.valueOf(c), "", "", "", "", "J 00/00/0000", "", "", "00:00", "", "00:00", "", "", "00:00:00", ""});
+                    l.add(new String[]{String.valueOf(c), "", "", "", "", produto + " - " + Funcoes.data_atual(), "", "", "00:00", "", "00:00", "", "", "00:00:00", ""});
                     break;
 
                 case 15:
@@ -73,8 +74,9 @@ public class Formato {
         return l;
     }
 
-    public Formato(String path) {
-
+    public Formato(String path, String produto) {
+        this.produto = produto;
+        this.linhas = linhas_format();
         try {
             Funcoes.criarCSV(path, colunas, linhas, null);
         } catch (Exception e) {

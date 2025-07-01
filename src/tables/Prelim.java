@@ -13,9 +13,12 @@ import Framework.Funcoes;
 public class Prelim {
 
     String[] coluna = {"PG", "EDICAO", "TIPO", "SUBTIPO", "ORIGEM", "RETRANCA", "REP", "LOC", "tCab", "tVT", "tMat", "MODI", "APV", "TEMPO", "ASSUNTO"};
-    String[] linha = {"0", "", "", "", "", "", "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""};
+    String[] linha;
+    String produto;
 
-    public Prelim(String path) {
+    public Prelim(String path, String produto) {
+        this.produto = produto;
+        this.linha = new String[] {"0", "", "", "", "", produto + " - " + Funcoes.data_atual(), "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""};
         Funcoes.criarCSV(path, coluna, null, linha);
     }
 }

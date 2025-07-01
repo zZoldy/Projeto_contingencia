@@ -5,6 +5,7 @@
 package controller;
 
 import Framework.Funcoes;
+import Listener.Tempo_producao_listener;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,7 +34,7 @@ import view.Tbl_news;
  *
  * @author Z D K
  */
-public class C_principal {
+public class C_principal implements Tempo_producao_listener {
 
     Principal view;
     Tbl_news tbl_news;
@@ -49,6 +50,10 @@ public class C_principal {
 
     public void init() {
         view.lbl_close.setVisible(false);
+        view.lbl_tempo_producao.setVisible(false);
+        view.formField_in_jorn.setVisible(false);
+        view.lbl_in_jornal.setVisible(false);
+        view.lbl_out_jornal.setVisible(false);
 
         setTree();
         hora_atual();
@@ -58,13 +63,24 @@ public class C_principal {
             if (chave.equals("last_file_open")) {
                 if (!valor.equals("")) {
                     File last_file_open = new File(valor);
-                    recover_file_open(last_file_open);
-                    System.out.println("Não vazia");
-                } else {
-                    System.out.println("Vazia fia");
+                    if (last_file_open.exists()) {
+                        recover_file_open(last_file_open);
+                    }
+
                 }
             }
         }
+
+    }
+
+    /**
+     *
+     * @param tempo
+     */
+    @Override
+    public void onTempoProducaoAtualizado(String tempo) {
+        view.lbl_tempo_producao.setText("Tempo de Produção: " + tempo);
+        
     }
 
     public void info_variaveis() {
@@ -83,9 +99,8 @@ public class C_principal {
                     + "\nValor: " + valor);
         }
 
-        if (tbl_news != null) {
-            System.out.println(tbl_news.controller.lauda.toString());
-        }
+        System.out.println("Format: " + view.formField_in_jorn.getText());
+
     }
 
     public void setTree() {
@@ -134,6 +149,7 @@ public class C_principal {
 
     public void recover_file_open(File recover) {
         tbl_news = new Tbl_news();
+        tbl_news.controller.setTempoProducaoListener(this);
 
         SwingUtilities.invokeLater(() -> {
             tbl_news.setSize(view.Desktop.getSize());
@@ -152,14 +168,6 @@ public class C_principal {
         tree.getProcess_tree().getArquivo().setFile(recover);
 
         info_file_init_frame();
-        
-        view.lbl_close.setVisible(true);
-        view.lbl_close.setText("Clique para fechar");
-
-        tbl_news.setVisible(true);
-
-        jInternal = true;
-
     }
 
     void info_file_init_frame() {
@@ -175,12 +183,26 @@ public class C_principal {
         info_table.add(arquivo_info);
 
         tbl_news.info = info_table;
+
+        view.lbl_close.setVisible(true);
+        view.lbl_close.setText("Clique para fechar");
+
+        view.lbl_in_jornal.setVisible(true);
+        view.lbl_out_jornal.setVisible(true);
+        view.lbl_tempo_producao.setVisible(true);
+        view.formField_in_jorn.setVisible(true);
+
+        view.lbl_tempo_producao.setText("Tempo de Produção: " + tbl_news.controller.getTempoProducaoListener());
+
+        tbl_news.setVisible(true);
+        jInternal = true;
     }
 
     public void init_frame() {
 
         if (!jInternal) {
             tbl_news = new Tbl_news();
+            tbl_news.controller.setTempoProducaoListener(this);
             tbl_news.setSize(view.Desktop.getSize());
 
             try {
@@ -191,14 +213,8 @@ public class C_principal {
                 return;
             }
 
-            info_file_init_frame();
-
             view.Desktop.add(tbl_news);
-
-            tbl_news.setVisible(true);
-            view.lbl_close.setVisible(true);
-            view.lbl_close.setText("Clique para fechar");
-            jInternal = true;
+            info_file_init_frame();
 
             config = Funcoes.salvarConfiguracao("last_file_open", tree.getProcess_tree().getArquivo().getFile().getPath());
 
@@ -229,13 +245,20 @@ public class C_principal {
             }
             tbl_news.controller.lauda = new Lauda("", "");
 
+            view.lbl_tempo_producao.setVisible(false);
+            view.formField_in_jorn.setVisible(false);
+            view.lbl_in_jornal.setVisible(false);
+            view.lbl_out_jornal.setVisible(false);
+
             view.lbl_close.setVisible(false);
             view.lbl_frame_open.setText("Nenhum arquivo em uso");
             jInternal = false;
+
             tree.attNode(tree.getProcess_tree());
 
             config = Funcoes.salvarConfiguracao("last_file_open", "");
             Table.linhasComErroDeTempo.clear();
+
             tbl_news.dispose();
             tbl_news = null;
         }
@@ -260,16 +283,21 @@ public class C_principal {
                 JMenuItem pop = null;
                 System.out.println("Click: " + node_select.getNome());
 
-                if (node_select.getNome().equals("Formato.csv")) {
+                if (node_select.getNome().equals("Formato")) {
                     pop = new JMenuItem("Enviar para Prelim");
                     pop.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
+
+                            ver_table_open(tree.getProcess_tree().getArquivo().getFile());
+
                             File parent_formato = new File(node_select.getArquivo().getFile().getParent());
                             File prelim = new File(parent_formato, "Prelim.csv");
 
                             try {
                                 Funcoes.copy_file(node_select.getArquivo().getFile(), prelim);
+                                tree.getProcess_tree().getArquivo().setFile(prelim);
+                                init_frame();
                             } catch (Exception ex) {
                                 System.err.println("\tErro ao copiar Formato/Prelim\n" + ex);
                             }
@@ -289,6 +317,12 @@ public class C_principal {
         }
     }
 
+    void ver_table_open(File file) {
+        if (file != null) {
+            process_close_table();
+        }
+    }
+
     public void tbl_responsiva() {
         if (tbl_news != null) {
             tbl_news.setSize(view.Desktop.getSize());
@@ -303,5 +337,14 @@ public class C_principal {
             String horario_formatado = agora.format(formato);
             view.lbl_horario.setText(horario_formatado);
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void in_out_tempo_jornal() {
+        view.formField_in_jorn.transferFocus();
+        
+        String tempo_prod = view.lbl_tempo_producao.getText().split(": ")[1];
+        String tempo_jornal = view.formField_in_jorn.getText();
+        view.lbl_out_jornal.setText("Saída do Jornal: "+Funcoes.soma_tempo(tempo_prod, tempo_jornal));
+        
     }
 }
