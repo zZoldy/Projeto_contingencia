@@ -5,16 +5,24 @@
 package controller;
 
 import Framework.Funcoes;
-import Listener.Tempo_producao_listener;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.SwingUtilities;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
@@ -25,6 +33,7 @@ import javax.swing.table.TableColumn;
 import model.Lauda;
 import model.Table;
 import view.Tbl_news;
+import Listener.Tempo_listener;
 
 /**
  *
@@ -35,20 +44,34 @@ public class C_tbl_news {
     Tbl_news view;
     public File arquivo;
     public Lauda lauda;
+    public String tempo_entrada;
     public String tempo_producao;
-    private Tempo_producao_listener listener;
+
+    Popup popupAtual = null;
+
+    public Tempo_listener listener;
 
     public C_tbl_news(Tbl_news view) {
         this.view = view;
     }
 
-    public void setTempoProducaoListener(Tempo_producao_listener listener) {
+    public void setListener(Tempo_listener listener) {
         this.listener = listener;
     }
-    
-    public String getTempoProducaoListener(){
-        tempo_producao = (String) view.tbl_news.getValueAt(0, 13);
+
+    public String getTempoEntrada() {
+        tempo_entrada = (String) view.tbl_news.getValueAt(0, 13);
+        return tempo_entrada;
+    }
+
+    public String getTempoProducao() {
+        int r = view.tbl_news.getRowCount() - 1;
+        tempo_producao = (String) view.tbl_news.getValueAt(r, 13);
         return tempo_producao;
+    }
+
+    public String getTempoSaida() {
+        return Funcoes.soma_tempo(tempo_entrada, tempo_producao);
     }
 
     public void in_celula(JTable tabela) {
@@ -62,20 +85,10 @@ public class C_tbl_news {
             if (editor != null) {
                 editor.requestFocus();
 
-                TableCellEditor cellEditor = tabela.getCellEditor(linha, coluna);
-                if (cellEditor != null) {
-                    cellEditor.addCellEditorListener(new CellEditorListener() {
-                        @Override
-                        public void editingStopped(ChangeEvent e) {
-                            ajustar_largura_colunas(tabela);
-                        }
+                add_tempo_entrada(view.tbl_news);
+                in_tMat(view.tbl_news);
+                ajustar_largura_colunas(tabela);
 
-                        @Override
-                        public void editingCanceled(ChangeEvent e) {
-                            ajustar_largura_colunas(tabela);
-                        }
-                    });
-                }
             }
         }
     }
@@ -153,10 +166,18 @@ public class C_tbl_news {
         }
 
         att_linha_created(modelo_tabela, linha_selecionada);
-
+        if (listener != null) {
+            listener.onAttTempo();
+        }
     }
 
     public void excluir_linha(JTable table, JPanel externo) {
+        int linha_selecionada = table.getSelectedRow();
+        
+        int rows = (table.getRowCount() - 1);
+        if (rows == 0) {
+            this.tempo_producao = "00:00:00";
+        }
         if (lauda.lauda_aberta) {
             lauda.ver_stts_lauda();
             lauda.fechar_editor_lauda(table, externo);
@@ -167,11 +188,6 @@ public class C_tbl_news {
         }
 
         DefaultTableModel modelo = (DefaultTableModel) table.getModel();
-
-        int linha_selecionada = table.getSelectedRow();
-        if (linha_selecionada == -1 || linha_selecionada == 0) {
-            return;
-        }
 
         List<File> laudas = lauda.list_laudas();
 
@@ -186,6 +202,7 @@ public class C_tbl_news {
             }
 
             modelo.removeRow(linha_selecionada);
+
             att_linha_delected(modelo, linha_selecionada);
 
         } catch (Exception e) {
@@ -209,10 +226,15 @@ public class C_tbl_news {
         Table.linhasComErroDeTempo = novasLinhasErro;
         String line_erro_file = "LinhasComErro_" + view.info.get(0) + "_" + view.info.get(1);
         StringBuilder lines = builder_linhas();
-        
+
         C_principal.config = Funcoes.salvarConfiguracao(line_erro_file, lines.toString());
 
         ajustar_largura_colunas(view.tbl_news);
+        if (listener != null) {
+            listener.onAttTempo();
+            listener.onLastTempoAtualizado();
+            listener.attSaidaJornal();
+        }
     }
 
     public void att_linha_created(DefaultTableModel modelo, int linha_selecionada) {
@@ -295,133 +317,129 @@ public class C_tbl_news {
         return lauda_txt;
     }
 
-    public void add_tempo(JTable table) {
-        table.getModel().addTableModelListener((TableModelEvent e) -> {
-            int colunaEditada = e.getColumn(); // Obtém a coluna editada
-            int linhaEditada = e.getFirstRow(); // Obtém a linha editada
+    void tempo(JTable table) {
+        int total_lines = table.getRowCount();
 
-            if (colunaEditada == 8 || colunaEditada == 9) {
-                // Obtém os valores das colunas "tCab" e "tVt"
-                Object tCabValue = table.getValueAt(linhaEditada, 8);
-                Object tVtValue = table.getValueAt(linhaEditada, 9);
+        for (int c = 1; c < (total_lines - 1); c++) {
+            String valor_tempo = (String) table.getValueAt(c, 13);
 
-                // Faz o parsing manual do tempo mm:ss
-                int[] tCabParts = parseMinSec(tCabValue);
-                int[] tVtParts = parseMinSec(tVtValue);
+            String valor_tMat = (String) table.getValueAt(c, 10);
+            valor_tMat = Funcoes.format_ms_to_hms(valor_tMat);
 
-                // Soma os tempos em segundos
-                int totalSegundos = (tCabParts[0] * 60 + tCabParts[1]) + (tVtParts[0] * 60 + tVtParts[1]);
+            String soma = Funcoes.soma_tempo(valor_tMat, valor_tempo);
 
-                String totalTimeFormatted;
+            this.tempo_producao = soma;
+            table.setValueAt(soma, (c + 1), 13);
 
-                String line_erro_file = "LinhasComErro_" + view.info.get(0) + "_" + view.info.get(1);
-
-                // Se ultrapassar 59:59 (3599 segundos), zera
-                if (totalSegundos > (59 * 60 + 59)) {
-                    totalTimeFormatted = "00:00";
-                    Table.linhasComErroDeTempo.add(linhaEditada);
-                } else {
-                    int horas = totalSegundos / 60;
-                    int minutos = totalSegundos % 60;
-                    totalTimeFormatted = String.format("%02d:%02d", horas, minutos);
-                    Table.linhasComErroDeTempo.remove(linhaEditada);
-                }
-
-                List<Integer> linhasOrdenadas = new ArrayList<>(Table.linhasComErroDeTempo);
-                Collections.sort(linhasOrdenadas);
-
-                StringBuilder lines = builder_linhas();
-
-                C_principal.config = Funcoes.salvarConfiguracao(line_erro_file, lines.toString());
-                // Atualiza o valor na coluna 10 (tempo total)
-                view.tbl_news.setValueAt(totalTimeFormatted, linhaEditada, 10);
-
-                add_tempo_tMat(linhaEditada, totalTimeFormatted, table);
-
+            // Notifica o ouvinte (o JFrame Principal)
+            if (listener != null) {
+                listener.onLastTempoAtualizado();
             }
-        });
+        }
     }
 
-    void add_tempo_tMat(int line_edit, String valor, JTable table) {
-        int total_lines = table.getRowCount();
-        String last_value = "";
+    public void in_tMat(JTable table) {
+        int line = table.getSelectedRow();
+        int column = table.getSelectedColumn();
 
-        String format_valor = Funcoes.format_ms_to_hms(valor);
-        System.out.println("Valor Formatado: " + format_valor);
-
-        if (valor.equals("00:00")) {
-            int next_line = line_edit + 1;
-            if (next_line < total_lines) {
-                table.setValueAt(format_valor, next_line, 13);
-            } else {
-                System.out.println("1");
-                System.out.println("Próxima linha (" + next_line + ") fora do intervalo da tabela.");
-                add_linha_last(table);
-                table.setValueAt(format_valor, next_line, 13);
-            }
+        if (line == -1 || !(column == 8 || column == 9)) {
             return;
         }
 
-        for (int i = line_edit; i >= 1; i--) {
-            last_value = (String) table.getValueAt(i, 13);
-            if (!last_value.equals("00:00:00")) {
-                break;
-            } else {
-                last_value = "00:00:00";
-            }
-        }
+        Object tCab = table.getValueAt(line, 8);
+        Object tVt = table.getValueAt(line, 9);
 
-        String calc_tempo_anterior = Funcoes.soma_tempo(last_value, format_valor);
+        int[] cab = parseMinSec(tCab);
+        int[] vt = parseMinSec(tVt);
 
-        // Atualiza a linha seguinte, só se não estiver fora do range
-        int next_line = line_edit + 1;
-        if (next_line < total_lines) {
-            table.setValueAt(calc_tempo_anterior, next_line, 13);
+        int totalSeg = (cab[0] * 60 + cab[1]) + (vt[0] * 60 + vt[1]);
+
+        String tMat;
+        if (totalSeg > 3599) { // maior que 59:59
+            tMat = "00:00";
+            Table.linhasComErroDeTempo.add(line);
         } else {
-            System.out.println("2");
-            System.out.println("Próxima linha (" + next_line + ") fora do intervalo da tabela.");
-            add_linha_last(table);
-            table.setValueAt(calc_tempo_anterior, next_line, 13);
+            int min = totalSeg / 60;
+            int sec = totalSeg % 60;
+            tMat = String.format("%02d:%02d", min, sec);
+            Table.linhasComErroDeTempo.remove(line);
         }
 
-        for (int c = line_edit + 1; c < total_lines - 1; c++) {
-            String valor_seg_tMat = (String) table.getValueAt(c, 10);
-            if (!valor_seg_tMat.equals("00:00")) {
-                System.out.println("\n");
-                System.out.println("Indice: " + c + " - Valor: " + valor_seg_tMat);
-                String format_seg_tMat = Funcoes.format_ms_to_hms(valor_seg_tMat);
-                System.out.println("Indice: " + c + " - Valor Formatado: " + format_seg_tMat);
-
-                calc_tempo_anterior = Funcoes.soma_tempo(calc_tempo_anterior, format_seg_tMat);
-                System.out.println("Calculo: " + calc_tempo_anterior);
-
-                table.setValueAt(calc_tempo_anterior, (c + 1), 13);
-
-            }
+        table.setValueAt(tMat, line, 10);
+        if (listener != null) {
+            listener.onAttTempo();
+            listener.attSaidaJornal();
         }
-        calc_tempo_anterior = "00:00:00";
+
     }
 
-    public String add_tempo_producao(JTable table) {
+    public String add_tempo_entrada(JTable table) {
         int linha = table.getSelectedRow();
         int coluna = table.getSelectedColumn();
 
         if (linha == 0 && coluna == 13) {
             String valor = (String) table.getValueAt(linha, coluna);
             if (valor != null) {
-                this.tempo_producao = valor;
+                this.tempo_entrada = valor;
 
                 // Notifica o ouvinte (o JFrame Principal)
                 if (listener != null) {
-                    listener.onTempoProducaoAtualizado(valor);
+                    listener.onTempoEntradaAtualizado(valor);
+                    listener.attSaidaJornal();
                 }
 
-                return tempo_producao;
+                return tempo_entrada;
             }
         }
         return "";
     }
-    // Função auxiliar para parsing de mm:ss
+
+    public void tempo_linhas_selecionadas(JTable table) {
+        StringBuilder tooltip = new StringBuilder("<html>");
+        int rows[] = table.getSelectedRows();
+        int columns[] = table.getSelectedColumns();
+        if (rows.length == 1) {
+            table.setToolTipText(null);
+            close_pop_up();
+            return;
+        }
+
+        String tempo_int = Funcoes.format_ms_to_hms((String) table.getValueAt(rows[0], 10));
+
+        for (int line : rows) {
+            int next_line = line + 1;
+            if (next_line <= rows[rows.length - 1]) {
+                String tempo_next = Funcoes.format_ms_to_hms((String) table.getValueAt(next_line, 10));
+                tempo_int = Funcoes.soma_tempo(tempo_int, tempo_next);
+            }
+        }
+
+        tooltip.append("Tempo: ").append(tempo_int).append("<br>");
+        tooltip.append("</html>");
+
+        JLabel label = new JLabel(tooltip.toString());
+        label.setOpaque(true);
+        label.setBackground(new Color(255, 255, 210));
+        label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        // Última linha da seleção
+        int ultimaLinha = rows[rows.length - 1];
+        int ultimaColuna = columns[columns.length - 1];
+
+        // Pega o retângulo da última célula da coluna 0 (ou qualquer coluna)
+        Rectangle cellRect = table.getCellRect(ultimaLinha, ultimaColuna, true);
+
+        System.out.println("CellRect: " + cellRect);
+        Point tablePos = table.getLocationOnScreen();
+
+        int x = tablePos.x + cellRect.x + cellRect.width;
+        int y = tablePos.y + cellRect.y + cellRect.height;
+
+        // Cria popup
+        PopupFactory factory = PopupFactory.getSharedInstance();
+        popupAtual = factory.getPopup(table, label, x, y);
+        popupAtual.show();
+    }
 
     private int[] parseMinSec(Object val) {
         if (val == null || val.toString().isEmpty()) {
@@ -448,4 +466,11 @@ public class C_tbl_news {
         return linhas;
     }
 
+    public void close_pop_up() {
+        // Esconde popup anterior
+        if (popupAtual != null) {
+            popupAtual.hide();
+            popupAtual = null;
+        }
+    }
 }

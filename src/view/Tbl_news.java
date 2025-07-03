@@ -8,7 +8,10 @@ import controller.C_tbl_news;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +21,6 @@ import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import model.Table;
 
 /**
  *
@@ -27,6 +29,7 @@ import model.Table;
 public class Tbl_news extends javax.swing.JInternalFrame {
 
     public List<String> info;
+    boolean delete = true;
 
     /**
      * Creates new form tbl_news
@@ -68,6 +71,13 @@ public class Tbl_news extends javax.swing.JInternalFrame {
                         editor.requestFocusInWindow();
                     }
                 }
+            }
+        });
+
+        tbl_news.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                controller.close_pop_up(); // Fecha popup ao começar nova seleção
             }
         });
 
@@ -114,6 +124,11 @@ public class Tbl_news extends javax.swing.JInternalFrame {
 
             }
         ));
+        tbl_news.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tbl_newsMouseReleased(evt);
+            }
+        });
         tbl_news.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 tbl_newsKeyPressed(evt);
@@ -151,6 +166,7 @@ public class Tbl_news extends javax.swing.JInternalFrame {
 
     private void tbl_newsKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_newsKeyPressed
         // TODO add your handling code here:
+
         if (evt.getKeyCode() == KeyEvent.VK_INSERT) {
             if (info.get(1).equals("Formato")) {
                 return;
@@ -162,7 +178,32 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             if (info.get(1).equals("Formato")) {
                 return;
             }
+
+            if (tbl_news.getSelectedRow() == -1 || tbl_news.getSelectedRow() == 0 || tbl_news.getSelectedRow() == 1) {
+                return;
+            }
+            
+            if (!delete) {
+                System.out.println("Aguarde para deletar novamente...");
+                return;
+            }
+
+            delete = false;
+
             controller.excluir_linha(tbl_news, pn_fundo);
+
+            // Timer para reabilitar a exclusão após 2 segundos
+            javax.swing.Timer timer = new javax.swing.Timer(1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    delete = true;
+                    System.out.println("Pode deletar novamente agora.");
+                }
+            });
+            timer.setRepeats(false); // garante que só executa 1 vez
+            timer.start();
+            return;
+
         }
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -170,7 +211,9 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             if (info.get(1).equals("Formato")) {
                 return;
             }
+
             controller.in_celula(tbl_news);
+
         }
 
         if (evt.getKeyCode() == KeyEvent.VK_B) {
@@ -200,9 +243,20 @@ public class Tbl_news extends javax.swing.JInternalFrame {
 
     private void tbl_newsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_newsKeyReleased
         // TODO add your handling code here:
-        controller.add_tempo_producao(tbl_news);
-        controller.add_tempo(tbl_news);
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            evt.consume();
+
+            controller.add_tempo_entrada(tbl_news);
+            controller.in_tMat(tbl_news);
+
+        }
+
     }//GEN-LAST:event_tbl_newsKeyReleased
+
+    private void tbl_newsMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_newsMouseReleased
+        // TODO add your handling code here:
+        controller.tempo_linhas_selecionadas(tbl_news);
+    }//GEN-LAST:event_tbl_newsMouseReleased
 
     void info_variavel() {
         for (String infos : info) {

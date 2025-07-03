@@ -263,9 +263,22 @@ public class Funcoes {
 
     public static int converter_to_segundos(String tempo) {
         String[] partes = tempo.split(":");
-        int horas = partes.length > 0 ? Integer.parseInt(partes[0]) : 0;
-        int minutos = partes.length > 1 ? Integer.parseInt(partes[1]) : 0;
-        int segundos = partes.length > 2 ? Integer.parseInt(partes[2]) : 0;
+
+        int horas = 0;
+        int minutos = 0;
+        int segundos = 0;
+
+        if (partes.length == 3) {
+            horas = Integer.parseInt(partes[0]);
+            minutos = Integer.parseInt(partes[1]);
+            segundos = Integer.parseInt(partes[2]);
+        } else if (partes.length == 2) {
+            minutos = Integer.parseInt(partes[0]);
+            segundos = Integer.parseInt(partes[1]);
+        } else if (partes.length == 1) {
+            segundos = Integer.parseInt(partes[0]);
+        }
+
         return horas * 3600 + minutos * 60 + segundos;
     }
 
@@ -279,6 +292,18 @@ public class Funcoes {
         int segundos = total_segundos % 60;
 
         return String.format("%02d:%02d:%02d", horas, mins, segundos);
+    }
+
+    public static String soma_mins(String tempo_1, String tempo_2) {
+        int segundos_1 = converter_to_segundos(tempo_1);
+        int segundos_2 = converter_to_segundos(tempo_2);
+        int total_segundos = segundos_1 + segundos_2;
+
+        int horas = total_segundos / 3600;
+        int mins = (total_segundos % 3600) / 60;
+        int segundos = total_segundos % 60;
+
+        return String.format("%02d:%02d", mins, segundos);
     }
 
     public static String format_ms_to_hms(String mm_ss) {

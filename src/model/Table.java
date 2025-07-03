@@ -43,7 +43,7 @@ public class Table {
     // Defina a tabela em base do modelo
     public static void model_padrao(DefaultTableModel modelo, JTable table) {
         table.setModel(modelo);
-        
+
         int[] colunasComEditor = {8, 9, 13};
         for (int col : colunasComEditor) {
             if (col < table.getColumnCount()) {
@@ -115,12 +115,15 @@ public class Table {
     static void renderer_line_table(JTable tabela) {
         tabela.setOpaque(false);
         tabela.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            Font font = new Font("Arial Black", Font.BOLD, 16);
+
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
                     boolean isSelected, boolean hasFocus,
                     int row, int column) {
                 Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+                cell.setFont(font);
                 setHorizontalAlignment(SwingConstants.CENTER);  // Centraliza
 
                 renderer_lines(isSelected, cell, row);

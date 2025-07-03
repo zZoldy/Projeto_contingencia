@@ -8,7 +8,13 @@ package Listener;
  *
  * @author Z D K
  */
-public interface Tempo_producao_listener {
+public interface Tempo_listener {
 
-    void onTempoProducaoAtualizado(String tempo);
+    void onTempoEntradaAtualizado(String tempo);
+    
+    void onLastTempoAtualizado();
+    
+    void attSaidaJornal();
+    
+    void onAttTempo();
 }

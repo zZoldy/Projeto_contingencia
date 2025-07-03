@@ -5,7 +5,6 @@
 package controller;
 
 import Framework.Funcoes;
-import Listener.Tempo_producao_listener;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,12 +28,13 @@ import model.Table;
 import model.Tree;
 import view.Principal;
 import view.Tbl_news;
+import Listener.Tempo_listener;
 
 /**
  *
  * @author Z D K
  */
-public class C_principal implements Tempo_producao_listener {
+public class C_principal implements Tempo_listener {
 
     Principal view;
     Tbl_news tbl_news;
@@ -51,7 +51,6 @@ public class C_principal implements Tempo_producao_listener {
     public void init() {
         view.lbl_close.setVisible(false);
         view.lbl_tempo_producao.setVisible(false);
-        view.formField_in_jorn.setVisible(false);
         view.lbl_in_jornal.setVisible(false);
         view.lbl_out_jornal.setVisible(false);
 
@@ -78,9 +77,27 @@ public class C_principal implements Tempo_producao_listener {
      * @param tempo
      */
     @Override
-    public void onTempoProducaoAtualizado(String tempo) {
-        view.lbl_tempo_producao.setText("Tempo de Produção: " + tempo);
-        
+    public void onTempoEntradaAtualizado(String tempo) {
+        view.lbl_in_jornal.setText("Entrada do Jornal: " + tempo);
+    }
+
+    /**
+     *
+     * @param tempo
+     */
+    @Override
+    public void onLastTempoAtualizado() {
+        view.lbl_tempo_producao.setText("Tempo de Produção: " + tbl_news.controller.getTempoProducao());
+    }
+
+    @Override
+    public void onAttTempo() {
+        tbl_news.controller.tempo(tbl_news.tbl_news);
+    }
+
+    @Override
+    public void attSaidaJornal() {
+        view.lbl_out_jornal.setText("Saída do Jornal: " + tbl_news.controller.getTempoSaida());
     }
 
     public void info_variaveis() {
@@ -92,14 +109,8 @@ public class C_principal implements Tempo_producao_listener {
             System.out.println("Dimension: " + c.getSize());
         }
 
-        System.out.println("\n\tConfigurações ");
-        for (String chave : config.stringPropertyNames()) {
-            String valor = config.getProperty(chave);
-            System.out.println("\nChave: " + chave
-                    + "\nValor: " + valor);
-        }
-
-        System.out.println("Format: " + view.formField_in_jorn.getText());
+        System.out.println("PROD: " + tbl_news.controller.tempo_producao);
+        System.out.println("IN: " + tbl_news.controller.tempo_entrada);
 
     }
 
@@ -149,7 +160,7 @@ public class C_principal implements Tempo_producao_listener {
 
     public void recover_file_open(File recover) {
         tbl_news = new Tbl_news();
-        tbl_news.controller.setTempoProducaoListener(this);
+        tbl_news.controller.setListener(this);
 
         SwingUtilities.invokeLater(() -> {
             tbl_news.setSize(view.Desktop.getSize());
@@ -190,9 +201,10 @@ public class C_principal implements Tempo_producao_listener {
         view.lbl_in_jornal.setVisible(true);
         view.lbl_out_jornal.setVisible(true);
         view.lbl_tempo_producao.setVisible(true);
-        view.formField_in_jorn.setVisible(true);
 
-        view.lbl_tempo_producao.setText("Tempo de Produção: " + tbl_news.controller.getTempoProducaoListener());
+        view.lbl_in_jornal.setText("Entrada do Jornal: " + tbl_news.controller.getTempoEntrada());
+        view.lbl_tempo_producao.setText("Tempo de Produção: " + tbl_news.controller.getTempoProducao());
+        view.lbl_out_jornal.setText("Saída do Jornal: " + tbl_news.controller.getTempoSaida());
 
         tbl_news.setVisible(true);
         jInternal = true;
@@ -202,7 +214,8 @@ public class C_principal implements Tempo_producao_listener {
 
         if (!jInternal) {
             tbl_news = new Tbl_news();
-            tbl_news.controller.setTempoProducaoListener(this);
+            tbl_news.controller.setListener(this);
+
             tbl_news.setSize(view.Desktop.getSize());
 
             try {
@@ -238,6 +251,7 @@ public class C_principal implements Tempo_producao_listener {
 
     public void process_close_table() {
         if (jInternal) {
+            tbl_news.controller.close_pop_up();
             try {
                 Funcoes.save_file(tbl_news.tbl_news, tree.getProcess_tree().getArquivo().getFile());
             } catch (Exception e) {
@@ -246,7 +260,6 @@ public class C_principal implements Tempo_producao_listener {
             tbl_news.controller.lauda = new Lauda("", "");
 
             view.lbl_tempo_producao.setVisible(false);
-            view.formField_in_jorn.setVisible(false);
             view.lbl_in_jornal.setVisible(false);
             view.lbl_out_jornal.setVisible(false);
 
@@ -339,12 +352,4 @@ public class C_principal implements Tempo_producao_listener {
         }, 0, 1, TimeUnit.SECONDS);
     }
 
-    public void in_out_tempo_jornal() {
-        view.formField_in_jorn.transferFocus();
-        
-        String tempo_prod = view.lbl_tempo_producao.getText().split(": ")[1];
-        String tempo_jornal = view.formField_in_jorn.getText();
-        view.lbl_out_jornal.setText("Saída do Jornal: "+Funcoes.soma_tempo(tempo_prod, tempo_jornal));
-        
-    }
 }
