@@ -141,7 +141,7 @@ public class Tree {
 
     private void ver_path_csvs(File produtos) {
         // Lista com os nomes dos arquivos .csv que serão criados
-        List<String> arquivosCsv = Arrays.asList("Prelim.csv", "Final.csv", "Formato.csv");
+        List<String> arquivosCsv = Arrays.asList("Prelim.csv", "Final.csv", "Formato.csv", "BOLETIM_CTL1.csv", "BOLETIM_CTL2.csv");
 
         // Para cada subpasta dentro da pasta "Produtos"
         File[] subpastas = produtos.listFiles(File::isDirectory);

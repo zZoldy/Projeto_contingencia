@@ -5,8 +5,9 @@
         <group>
             <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/view/Principal.java</file>
             <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/controller/C_principal.java</file>
-            <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/controller/C_tbl_news.java</file>
             <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/view/Tbl_news.java</file>
+            <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/controller/C_tbl_news.java</file>
+            <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/model/Table.java</file>
             <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/Framework/Funcoes.java</file>
             <file>file:/C:/Users/Z%20D%20K/OneDrive/Documentos/NetBeansProjects/ByInews/src/Listener/Tempo_listener.java</file>
         </group>

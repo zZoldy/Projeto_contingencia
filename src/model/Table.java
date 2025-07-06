@@ -77,14 +77,14 @@ public class Table {
                     if (row == 0) {
                         return column == 5 || column == 13;
                     }
-                    return column != 0 && column != 10 && column != 13;
+                    return column != 10 && column != 13;
                 }
             };
         } else {
             modelo = new DefaultTableModel() {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    return column != 0 && column != 10;
+                    return column != 10 && column != 13;
                 }
             };
         }

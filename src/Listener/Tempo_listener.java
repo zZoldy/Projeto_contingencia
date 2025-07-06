@@ -12,8 +12,6 @@ public interface Tempo_listener {
 
     void onTempoEntradaAtualizado(String tempo);
     
-    void onLastTempoAtualizado();
-    
     void attSaidaJornal();
     
     void onAttTempo();

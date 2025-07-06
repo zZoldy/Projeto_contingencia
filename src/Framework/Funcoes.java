@@ -156,12 +156,9 @@ public class Funcoes {
             }
         } else {
             System.out.println("Arquivo de configuração não existe ainda.");
-            properties.setProperty("Tema_desktop", "Default");
-            properties.setProperty("Tema_table", "Default");
             properties.setProperty("last_file_open", "");
             try (FileOutputStream fos = new FileOutputStream(config)) {
                 properties.store(fos, "Arquivo de configuração gerado");
-                System.out.println("✔ Arquivo de configuração criado com valores padrão.");
             } catch (IOException e) {
                 System.err.println("❌ Erro ao criar o arquivo de configuração:");
                 e.printStackTrace();

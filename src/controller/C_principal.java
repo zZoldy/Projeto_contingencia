@@ -29,6 +29,7 @@ import model.Tree;
 import view.Principal;
 import view.Tbl_news;
 import Listener.Tempo_listener;
+import java.time.Duration;
 
 /**
  *
@@ -50,10 +51,22 @@ public class C_principal implements Tempo_listener {
 
     public void init() {
         view.lbl_close.setVisible(false);
-        view.lbl_tempo_producao.setVisible(false);
-        view.lbl_in_jornal.setVisible(false);
-        view.lbl_out_jornal.setVisible(false);
 
+        view.lbl_tempo_producao_tempo.setVisible(false);
+        view.lbl_tempo_producao.setVisible(false);
+
+        view.lbl_in_jornal_tempo.setVisible(false);
+        view.lbl_in_jorn.setVisible(false);
+
+        view.lbl_out_jornal_tempo.setVisible(false);
+        view.lbl_out_jorn.setVisible(false);
+
+        view.lbl_encerramento.setVisible(false);
+        view.lbl_encerramento_tempo.setVisible(false);
+        
+        view.lbl_stts_jornal.setVisible(false);
+        view.lbl_stts_jornal_tempo.setVisible(false);
+        
         setTree();
         hora_atual();
 
@@ -65,7 +78,6 @@ public class C_principal implements Tempo_listener {
                     if (last_file_open.exists()) {
                         recover_file_open(last_file_open);
                     }
-
                 }
             }
         }
@@ -78,26 +90,79 @@ public class C_principal implements Tempo_listener {
      */
     @Override
     public void onTempoEntradaAtualizado(String tempo) {
-        view.lbl_in_jornal.setText("Entrada do Jornal: " + tempo);
-    }
-
-    /**
-     *
-     * @param tempo
-     */
-    @Override
-    public void onLastTempoAtualizado() {
-        view.lbl_tempo_producao.setText("Tempo de Produção: " + tbl_news.controller.getTempoProducao());
+        view.lbl_in_jornal_tempo.setText(tempo);
     }
 
     @Override
     public void onAttTempo() {
-        tbl_news.controller.tempo(tbl_news.tbl_news);
+        if (tbl_news.info.get(1).equals("Prelim")) {
+            tbl_news.controller.tempo_prelim(tbl_news.tbl_news);
+        } else if (tbl_news.info.get(1).equals("Final")) {
+            tbl_news.controller.tempo_final(tbl_news.tbl_news);
+        }
+    
+        
+        
+        view.lbl_tempo_producao_tempo.setText(tbl_news.controller.getTempoProducao());
+    
     }
 
     @Override
     public void attSaidaJornal() {
-        view.lbl_out_jornal.setText("Saída do Jornal: " + tbl_news.controller.getTempoSaida());
+        view.lbl_out_jornal_tempo.setText(tbl_news.controller.getTempoSaida());
+    }
+
+    public void tempoEncerramento() {
+        
+        
+        
+        LocalTime encerramento = LocalTime.parse(view.lbl_encerramento_tempo.getText());
+        LocalTime saida = LocalTime.parse(view.lbl_out_jornal_tempo.getText());
+
+        Duration diferenca = Duration.between(encerramento, saida);
+
+        String mensagem;
+
+        if (encerramento.isAfter(saida)) {
+            mensagem = "Estouro " + formatarDuracao(diferenca.abs());
+        } else if (encerramento.isBefore(saida)) {
+            mensagem = "Cabeça " + formatarDuracao(diferenca.abs());
+        } else {
+            mensagem = "OK";
+        }
+
+        System.out.println(mensagem);
+        view.lbl_stts_jornal_tempo.setText(mensagem);
+    }
+
+    private static String formatarDuracao(Duration d) {
+        long horas = d.toHours();
+        long minutos = d.toMinutesPart();
+        long segundos = d.toSecondsPart();
+
+        StringBuilder sb = new StringBuilder();
+
+        if (horas > 0) {
+            sb.append(horas).append(horas == 1 ? " h" : " hrs");
+        }
+        if (horas > 0 && minutos > 0) {
+            sb.append(", ");
+        }
+        if (minutos > 0) {
+            sb.append(minutos).append(" mins");
+        }
+        if ((horas > 0 || minutos > 0) && segundos > 0) {
+            sb.append(" e ");
+        }
+        if (segundos > 0) {
+            sb.append(segundos).append(" secs");
+        }
+
+        if (horas == 0 && minutos == 0 && segundos == 0) {
+            return "0 secs";
+        }
+
+        return sb.toString();
     }
 
     public void info_variaveis() {
@@ -198,13 +263,26 @@ public class C_principal implements Tempo_listener {
         view.lbl_close.setVisible(true);
         view.lbl_close.setText("Clique para fechar");
 
-        view.lbl_in_jornal.setVisible(true);
-        view.lbl_out_jornal.setVisible(true);
+        view.lbl_in_jornal_tempo.setVisible(true);
+        view.lbl_in_jorn.setVisible(true);
+
+        view.lbl_out_jornal_tempo.setVisible(true);
+        view.lbl_out_jorn.setVisible(true);
+
+        view.lbl_tempo_producao_tempo.setVisible(true);
         view.lbl_tempo_producao.setVisible(true);
 
-        view.lbl_in_jornal.setText("Entrada do Jornal: " + tbl_news.controller.getTempoEntrada());
-        view.lbl_tempo_producao.setText("Tempo de Produção: " + tbl_news.controller.getTempoProducao());
-        view.lbl_out_jornal.setText("Saída do Jornal: " + tbl_news.controller.getTempoSaida());
+        if (arquivo_info.equals("Final")) {
+            view.lbl_encerramento.setVisible(true);
+            view.lbl_encerramento_tempo.setVisible(true);
+
+            view.lbl_stts_jornal.setVisible(true);
+            view.lbl_stts_jornal_tempo.setVisible(true);
+        }
+
+        view.lbl_in_jornal_tempo.setText(tbl_news.controller.getTempoEntrada());
+        view.lbl_tempo_producao_tempo.setText(tbl_news.controller.getTempoProducao());
+        view.lbl_out_jornal_tempo.setText(tbl_news.controller.getTempoSaida());
 
         tbl_news.setVisible(true);
         jInternal = true;
@@ -259,12 +337,24 @@ public class C_principal implements Tempo_listener {
             }
             tbl_news.controller.lauda = new Lauda("", "");
 
+            view.lbl_tempo_producao_tempo.setVisible(false);
             view.lbl_tempo_producao.setVisible(false);
-            view.lbl_in_jornal.setVisible(false);
-            view.lbl_out_jornal.setVisible(false);
+
+            view.lbl_in_jornal_tempo.setVisible(false);
+            view.lbl_in_jorn.setVisible(false);
+
+            view.lbl_out_jornal_tempo.setVisible(false);
+            view.lbl_out_jorn.setVisible(false);
+
+            view.lbl_encerramento.setVisible(false);
+            view.lbl_encerramento_tempo.setVisible(false);
+
+            view.lbl_stts_jornal.setVisible(false);
+            view.lbl_stts_jornal_tempo.setVisible(false);
 
             view.lbl_close.setVisible(false);
             view.lbl_frame_open.setText("Nenhum arquivo em uso");
+
             jInternal = false;
 
             tree.attNode(tree.getProcess_tree());
