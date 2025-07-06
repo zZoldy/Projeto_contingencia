@@ -4,6 +4,8 @@
  */
 package Framework;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -23,6 +26,7 @@ import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -30,6 +34,32 @@ import javax.swing.table.TableModel;
 import model.Table;
 
 public class Funcoes {
+
+    // Funções TEMPO
+    public static void temporizador_acao(int delayMs, Runnable acao, AtomicBoolean temporizador_disp, String msg) {
+        System.out.println("IN Temporizador: " + temporizador_disp);
+
+        if (!temporizador_disp.get()) {
+            System.out.println("Ação " + msg + " Bloqueada!");
+            System.out.println("IF Temporizador: " + temporizador_disp);
+            return;
+        }
+
+        temporizador_disp.set(false);
+        acao.run();
+
+        javax.swing.Timer timer = new javax.swing.Timer(delayMs, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                temporizador_disp.set(true);
+                System.out.println("Ação " + msg + " Desbloqueada");
+                System.out.println("Timer Temporizador: " + temporizador_disp);
+            }
+        });
+
+        timer.setRepeats(false);
+        timer.start();
+    }
 
     public static void agendar_acao(String tempo, Runnable acao) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -50,6 +80,17 @@ public class Funcoes {
         }
     }
 
+    public static boolean delay_acao(String tempo, Runnable acao) {
+        boolean stts_acao = false;
+
+        if (stts_acao == true) {
+            return true;
+        }
+
+        return stts_acao;
+
+    }
+
     public static void iniciar_disparo(int segundos, Runnable acao) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(acao, 0, segundos, TimeUnit.SECONDS);
@@ -59,6 +100,152 @@ public class Funcoes {
         Date date_atual = new Date();
         SimpleDateFormat data_atual_formatada = new SimpleDateFormat("dd/MM/yyyy");
         return data_atual_formatada.format(date_atual);
+    }
+
+    // Processa um arquivo para definir um modelo de tabela;
+    public static int parseSafe(String part) {
+        try {
+            return Integer.parseInt(part);
+        } catch (NumberFormatException ex) {
+            return 0;
+        }
+    }
+
+    public static int converter_to_segundos(String tempo) {
+        String[] partes = tempo.split(":");
+
+        int horas = 0;
+        int minutos = 0;
+        int segundos = 0;
+
+        if (partes.length == 3) {
+            horas = Integer.parseInt(partes[0]);
+            minutos = Integer.parseInt(partes[1]);
+            segundos = Integer.parseInt(partes[2]);
+        } else if (partes.length == 2) {
+            minutos = Integer.parseInt(partes[0]);
+            segundos = Integer.parseInt(partes[1]);
+        } else if (partes.length == 1) {
+            segundos = Integer.parseInt(partes[0]);
+        }
+
+        return horas * 3600 + minutos * 60 + segundos;
+    }
+
+    public static String soma_tempo(String tempo_1, String tempo_2) {
+        int segundos_1 = converter_to_segundos(tempo_1);
+        int segundos_2 = converter_to_segundos(tempo_2);
+        int total_segundos = segundos_1 + segundos_2;
+
+        int horas = total_segundos / 3600;
+        int mins = (total_segundos % 3600) / 60;
+        int segundos = total_segundos % 60;
+
+        return String.format("%02d:%02d:%02d", horas, mins, segundos);
+    }
+
+    public static String soma_mins(String tempo_1, String tempo_2) {
+        int segundos_1 = converter_to_segundos(tempo_1);
+        int segundos_2 = converter_to_segundos(tempo_2);
+        int total_segundos = segundos_1 + segundos_2;
+
+        int horas = total_segundos / 3600;
+        int mins = (total_segundos % 3600) / 60;
+        int segundos = total_segundos % 60;
+
+        return String.format("%02d:%02d", mins, segundos);
+    }
+
+    public static String format_ms_to_hms(String mm_ss) {
+        // Converte mm:ss para segundos
+        String[] partes = mm_ss.split(":");
+        int minutos = partes.length > 0 ? Integer.parseInt(partes[0]) : 0;
+        int segundos = partes.length > 1 ? Integer.parseInt(partes[1]) : 0;
+        int totalSegundos = minutos * 60 + segundos;
+
+        // Converte totalSegundos para HH:mm:ss
+        int horas = totalSegundos / 3600;
+        int minutosRestantes = (totalSegundos % 3600) / 60;
+        int segundosRestantes = totalSegundos % 60;
+
+        String tempoFormatado = String.format("%02d:%02d:%02d", horas, minutosRestantes, segundosRestantes);
+        return tempoFormatado;
+    }
+
+    public static String formatarDuracao(Duration d) {
+        long horas = d.toHours();
+        long minutos = d.toMinutesPart();
+        long segundos = d.toSecondsPart();
+
+        StringBuilder sb = new StringBuilder();
+
+        if (horas > 0) {
+            sb.append(horas).append(horas == 1 ? " h" : " hrs");
+        }
+        if (horas > 0 && minutos > 0) {
+            sb.append(", ");
+        }
+        if (minutos > 0) {
+            sb.append(minutos).append(" mins");
+        }
+        if ((horas > 0 || minutos > 0) && segundos > 0) {
+            sb.append(" e ");
+        }
+        if (segundos > 0) {
+            sb.append(segundos).append(" secs");
+        }
+
+        if (horas == 0 && minutos == 0 && segundos == 0) {
+            return "0 secs";
+        }
+
+        return sb.toString();
+    }
+
+    // Funcoes Arquivo
+    public static void processar_arquivo(File file, JTable tabela) {
+        System.out.println("Procee: " + file.getPath());
+
+        if (file == null || !file.exists()) {
+            System.out.println("Arquivo não encontrado: " + file.getAbsolutePath());
+            return;
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String linha;
+            boolean primeira_linha = true;
+
+            String model_table = file.getName().contains(".") ? file.getName().substring(0, file.getName().lastIndexOf(".")) : file.getName();
+            DefaultTableModel modelo = Table.modelos(model_table);
+
+            if (modelo == null) {
+                System.err.println("Modelo Nulo");
+                return;
+            }
+
+            while ((linha = br.readLine()) != null) {
+                String[] valores = linha.split(",");
+
+                if (primeira_linha) {
+                    for (String coluna : valores) {
+                        modelo.addColumn(coluna.trim());
+                    }
+
+                    primeira_linha = false;
+                } else {
+                    Vector<String> row = new Vector<>();
+                    for (String valor : valores) {
+                        row.add(valor.trim());
+                    }
+                    modelo.addRow(row);
+                }
+            }
+
+            Table.model_padrao(modelo, tabela);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Erro geral ao processar o arquivo");
+        }
     }
 
     public static void criarCSV(String caminhoArquivo, String[] colunas, List<String[]> linhas, String[] linha) {
@@ -196,127 +383,6 @@ public class Funcoes {
         }
 
         return config;
-    }
-
-    public static String load_lines_erro(String chave) {
-        Properties config = new Properties();
-
-        return null;
-    }
-
-    // Processa um arquivo para definir um modelo de tabela;
-    public static void processar_arquivo(File file, JTable tabela) {
-        System.out.println("Procee: " + file.getPath());
-
-        if (file == null || !file.exists()) {
-            System.out.println("Arquivo não encontrado: " + file.getAbsolutePath());
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String linha;
-            boolean primeira_linha = true;
-
-            String model_table = file.getName().contains(".") ? file.getName().substring(0, file.getName().lastIndexOf(".")) : file.getName();
-            DefaultTableModel modelo = Table.modelos(model_table);
-
-            if (modelo == null) {
-                System.err.println("Modelo Nulo");
-                return;
-            }
-
-            while ((linha = br.readLine()) != null) {
-                String[] valores = linha.split(",");
-
-                if (primeira_linha) {
-                    for (String coluna : valores) {
-                        modelo.addColumn(coluna.trim());
-                    }
-
-                    primeira_linha = false;
-                } else {
-                    Vector<String> row = new Vector<>();
-                    for (String valor : valores) {
-                        row.add(valor.trim());
-                    }
-                    modelo.addRow(row);
-                }
-            }
-
-            Table.model_padrao(modelo, tabela);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Erro geral ao processar o arquivo");
-        }
-    }
-
-    public static int parseSafe(String part) {
-        try {
-            return Integer.parseInt(part);
-        } catch (NumberFormatException ex) {
-            return 0;
-        }
-    }
-
-    public static int converter_to_segundos(String tempo) {
-        String[] partes = tempo.split(":");
-
-        int horas = 0;
-        int minutos = 0;
-        int segundos = 0;
-
-        if (partes.length == 3) {
-            horas = Integer.parseInt(partes[0]);
-            minutos = Integer.parseInt(partes[1]);
-            segundos = Integer.parseInt(partes[2]);
-        } else if (partes.length == 2) {
-            minutos = Integer.parseInt(partes[0]);
-            segundos = Integer.parseInt(partes[1]);
-        } else if (partes.length == 1) {
-            segundos = Integer.parseInt(partes[0]);
-        }
-
-        return horas * 3600 + minutos * 60 + segundos;
-    }
-
-    public static String soma_tempo(String tempo_1, String tempo_2) {
-        int segundos_1 = converter_to_segundos(tempo_1);
-        int segundos_2 = converter_to_segundos(tempo_2);
-        int total_segundos = segundos_1 + segundos_2;
-
-        int horas = total_segundos / 3600;
-        int mins = (total_segundos % 3600) / 60;
-        int segundos = total_segundos % 60;
-
-        return String.format("%02d:%02d:%02d", horas, mins, segundos);
-    }
-
-    public static String soma_mins(String tempo_1, String tempo_2) {
-        int segundos_1 = converter_to_segundos(tempo_1);
-        int segundos_2 = converter_to_segundos(tempo_2);
-        int total_segundos = segundos_1 + segundos_2;
-
-        int horas = total_segundos / 3600;
-        int mins = (total_segundos % 3600) / 60;
-        int segundos = total_segundos % 60;
-
-        return String.format("%02d:%02d", mins, segundos);
-    }
-
-    public static String format_ms_to_hms(String mm_ss) {
-        // Converte mm:ss para segundos
-        String[] partes = mm_ss.split(":");
-        int minutos = partes.length > 0 ? Integer.parseInt(partes[0]) : 0;
-        int segundos = partes.length > 1 ? Integer.parseInt(partes[1]) : 0;
-        int totalSegundos = minutos * 60 + segundos;
-
-        // Converte totalSegundos para HH:mm:ss
-        int horas = totalSegundos / 3600;
-        int minutosRestantes = (totalSegundos % 3600) / 60;
-        int segundosRestantes = totalSegundos % 60;
-
-        String tempoFormatado = String.format("%02d:%02d:%02d", horas, minutosRestantes, segundosRestantes);
-        return tempoFormatado;
     }
 
 }

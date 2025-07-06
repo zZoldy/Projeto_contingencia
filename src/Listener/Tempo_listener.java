@@ -15,4 +15,6 @@ public interface Tempo_listener {
     void attSaidaJornal();
     
     void onAttTempo();
+    
+    void attInTempos();
 }

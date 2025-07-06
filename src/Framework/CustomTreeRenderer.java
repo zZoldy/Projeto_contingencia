@@ -10,7 +10,6 @@ import java.awt.Component;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
-import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
@@ -20,8 +19,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  */
 public class CustomTreeRenderer extends DefaultTreeCellRenderer {
 
-    private Icon pastaIcon = new ImageIcon(getClass().getResource("/icon/pasta.png"));
-    private Icon arquivoIcon = new ImageIcon(getClass().getResource("/icon/arquivo.png"));
+    private final Icon pastaIcon = new ImageIcon(getClass().getResource("/icon/pasta.png"));
+    private final Icon arquivoIcon = new ImageIcon(getClass().getResource("/icon/arquivo.png"));
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value,
@@ -33,10 +32,9 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer {
             System.err.println("Erro ao carregar os ícones!");
         }
 
-        if (value instanceof DefaultMutableTreeNode) {
-            Object obj = ((DefaultMutableTreeNode) value).getUserObject();
-            if (obj instanceof NodeTree) {
-                NodeTree node = (NodeTree) obj;
+        if (value instanceof DefaultMutableTreeNode defaultMutableTreeNode) {
+            Object obj = defaultMutableTreeNode.getUserObject();
+            if (obj instanceof NodeTree node) {
                 if (node.isArquivo()) {
                     setIcon(arquivoIcon); // ícone de arquivo
                     setText(node.getNome()); // emoji de arquivo

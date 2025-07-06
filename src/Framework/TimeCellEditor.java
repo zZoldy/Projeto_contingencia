@@ -54,7 +54,6 @@ public class TimeCellEditor extends DefaultCellEditor {
             return "00:00";
         }
 
-        String clean = txt.replace(' ', '0');   // “  :  ” → “00:00”
         String[] p = txt.split(":");
 
         if (p.length == 2) {

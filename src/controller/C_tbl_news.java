@@ -56,7 +56,13 @@ public class C_tbl_news {
     }
 
     public String getTempoEntrada() {
-        tempo_entrada = (String) view.tbl_news.getValueAt(0, 13);
+        int column = 13;
+        if (column >= 0 && column < view.tbl_news.getColumnCount()) {
+            tempo_entrada = (String) view.tbl_news.getValueAt(0, column);
+        } else {
+            tempo_entrada = "00:00:00";
+        }
+
         return tempo_entrada;
     }
 
@@ -81,10 +87,6 @@ public class C_tbl_news {
         return Funcoes.soma_tempo(tempo_entrada, tempo_producao);
     }
 
-    public void getTempoEncerramento() {
-
-    }
-
     public void in_celula(JTable tabela) {
         int linha = tabela.getSelectedRow();
         int coluna = tabela.getSelectedColumn();
@@ -95,11 +97,6 @@ public class C_tbl_news {
 
             if (editor != null) {
                 editor.requestFocus();
-
-                add_tempo_entrada(view.tbl_news);
-                in_tMat(view.tbl_news);
-                ajustar_largura_colunas(tabela);
-
             }
         }
     }
@@ -256,6 +253,7 @@ public class C_tbl_news {
         if (listener != null) {
             listener.onAttTempo();
             listener.attSaidaJornal();
+            listener.attInTempos();
         }
     }
 
@@ -426,6 +424,7 @@ public class C_tbl_news {
         if (listener != null) {
             listener.onAttTempo();
             listener.attSaidaJornal();
+            listener.attInTempos();
         }
 
     }
@@ -443,6 +442,7 @@ public class C_tbl_news {
                 if (listener != null) {
                     listener.onTempoEntradaAtualizado(valor);
                     listener.attSaidaJornal();
+                    listener.attInTempos();
                 }
 
                 return tempo_entrada;

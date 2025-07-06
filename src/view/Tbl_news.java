@@ -4,6 +4,7 @@
  */
 package view;
 
+import Framework.Funcoes;
 import controller.C_tbl_news;
 import java.awt.Color;
 import java.awt.Component;
@@ -13,12 +14,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
 /**
  *
@@ -27,7 +30,8 @@ import javax.swing.KeyStroke;
 public class Tbl_news extends javax.swing.JInternalFrame {
 
     public List<String> info;
-    boolean delete = true;
+    AtomicBoolean delete = new AtomicBoolean(true);
+    AtomicBoolean create = new AtomicBoolean(true);
 
     /**
      * Creates new form tbl_news
@@ -80,6 +84,7 @@ public class Tbl_news extends javax.swing.JInternalFrame {
         });
 
         jScrollPane1.getViewport().setBackground(new Color(100, 100, 100));
+
     }
 
     /**
@@ -169,7 +174,11 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             if (info.get(1).equals("Formato")) {
                 return;
             }
-            controller.add_linha_selected(tbl_news, pn_fundo);
+            Funcoes.temporizador_acao(500, () -> {
+                System.out.println("Executando Inclusão");
+                controller.add_linha_selected(tbl_news, pn_fundo);
+            }, create, "Criar Linha");
+
         }
 
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -180,27 +189,14 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             if (tbl_news.getSelectedRow() == -1 || tbl_news.getSelectedRow() == 0 || tbl_news.getSelectedRow() == 1) {
                 return;
             }
-            
-            if (!delete) {
-                System.out.println("Aguarde para deletar novamente...");
-                return;
-            }
 
-            delete = false;
+            Funcoes.temporizador_acao(500, () -> {
+                System.out.println("Executando Exclusão");
+                System.out.println("Delete: " + delete);
+                controller.excluir_linha(tbl_news, pn_fundo);
+            }, delete, "Excluir Linha");
 
-            controller.excluir_linha(tbl_news, pn_fundo);
-
-            // Timer para reabilitar a exclusão após 2 segundos
-            javax.swing.Timer timer = new javax.swing.Timer(1000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    delete = true;
-                    System.out.println("Pode deletar novamente agora.");
-                }
-            });
-            timer.setRepeats(false); // garante que só executa 1 vez
-            timer.start();
-            return;
+            System.out.println("Delete 2: " + delete);
 
         }
 
@@ -242,11 +238,11 @@ public class Tbl_news extends javax.swing.JInternalFrame {
     private void tbl_newsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbl_newsKeyReleased
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            evt.consume();
-
+            controller.ajustar_largura_colunas(tbl_news);
+            
             controller.add_tempo_entrada(tbl_news);
             controller.in_tMat(tbl_news);
-
+            
         }
 
     }//GEN-LAST:event_tbl_newsKeyReleased

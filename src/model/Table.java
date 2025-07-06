@@ -23,20 +23,18 @@ import javax.swing.table.JTableHeader;
  */
 public class Table {
 
-    public JTable table;
     public String produto;
     public String modelo;
 
     public static Set<Integer> linhasComErroDeTempo = new HashSet<>();
 
-    public Table(JTable table) {
-        this.table = table;
+    public Table() {
+
     }
 
     @Override
     public String toString() {
-        return table.getName() + "\nTable: " + table
-                + "\nModelo-Table: " + modelo
+        return "\nModelo-Table: " + modelo
                 + "\nProduto-Table: " + produto;
     }
 
@@ -166,13 +164,5 @@ public class Table {
             }
 
         }
-    }
-
-    public JTable getTable() {
-        return table;
-    }
-
-    public void setTable(JTable table) {
-        this.table = table;
     }
 }

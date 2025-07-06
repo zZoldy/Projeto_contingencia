@@ -23,37 +23,15 @@ public class Arquivo {
 
         if (file != null) {
             if (file.isFile()) {
-                type_file();
+                table = new Table();
+
+                String nome_arquivo = getFile().getName();
+                String nome_produto = new File(getFile().getParent()).getName();
+
+                table.modelo = nome_arquivo;
+                table.produto = nome_produto;
+
             }
-        }
-    }
-
-    public void type_file() {
-        table = new Table(new JTable());
-
-        String nome_arquivo = getFile().getName();
-        String nome_produto = new File(getFile().getParent()).getName();
-
-        if (nome_arquivo.equals("Prelim.csv")) {
-            table.modelo = nome_arquivo;
-            table.produto = nome_produto;
-            table.table.setName("Prelim");
-            System.out.println("Prelim.csv");
-
-        } else if (file.getName().equals("Final.csv")) {
-            table.modelo = nome_arquivo;
-            table.produto = nome_produto;
-            table.table.setName("Final");
-            System.out.println("Final.csv");
-
-        } else if (file.getName().equals("Formato.csv")) {
-            table.modelo = nome_arquivo;
-            table.produto = nome_produto;
-            table.table.setName("Formato");
-            System.out.println("Formato.csv");
-        } else {
-            table = null;
-            System.out.println("Null.csv");
         }
     }
 

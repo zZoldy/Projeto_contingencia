@@ -63,10 +63,10 @@ public class C_principal implements Tempo_listener {
 
         view.lbl_encerramento.setVisible(false);
         view.lbl_encerramento_tempo.setVisible(false);
-        
+
         view.lbl_stts_jornal.setVisible(false);
         view.lbl_stts_jornal_tempo.setVisible(false);
-        
+
         setTree();
         hora_atual();
 
@@ -100,11 +100,8 @@ public class C_principal implements Tempo_listener {
         } else if (tbl_news.info.get(1).equals("Final")) {
             tbl_news.controller.tempo_final(tbl_news.tbl_news);
         }
-    
-        
-        
+
         view.lbl_tempo_producao_tempo.setText(tbl_news.controller.getTempoProducao());
-    
     }
 
     @Override
@@ -112,10 +109,12 @@ public class C_principal implements Tempo_listener {
         view.lbl_out_jornal_tempo.setText(tbl_news.controller.getTempoSaida());
     }
 
+    @Override
+    public void attInTempos() {
+        tempoEncerramento();
+    }
+
     public void tempoEncerramento() {
-        
-        
-        
         LocalTime encerramento = LocalTime.parse(view.lbl_encerramento_tempo.getText());
         LocalTime saida = LocalTime.parse(view.lbl_out_jornal_tempo.getText());
 
@@ -124,45 +123,14 @@ public class C_principal implements Tempo_listener {
         String mensagem;
 
         if (encerramento.isAfter(saida)) {
-            mensagem = "Estouro " + formatarDuracao(diferenca.abs());
+            mensagem = "Estouro " + Funcoes.formatarDuracao(diferenca.abs());
         } else if (encerramento.isBefore(saida)) {
-            mensagem = "Cabeça " + formatarDuracao(diferenca.abs());
+            mensagem = "Cabeça " + Funcoes.formatarDuracao(diferenca.abs());
         } else {
             mensagem = "OK";
         }
 
-        System.out.println(mensagem);
         view.lbl_stts_jornal_tempo.setText(mensagem);
-    }
-
-    private static String formatarDuracao(Duration d) {
-        long horas = d.toHours();
-        long minutos = d.toMinutesPart();
-        long segundos = d.toSecondsPart();
-
-        StringBuilder sb = new StringBuilder();
-
-        if (horas > 0) {
-            sb.append(horas).append(horas == 1 ? " h" : " hrs");
-        }
-        if (horas > 0 && minutos > 0) {
-            sb.append(", ");
-        }
-        if (minutos > 0) {
-            sb.append(minutos).append(" mins");
-        }
-        if ((horas > 0 || minutos > 0) && segundos > 0) {
-            sb.append(" e ");
-        }
-        if (segundos > 0) {
-            sb.append(segundos).append(" secs");
-        }
-
-        if (horas == 0 && minutos == 0 && segundos == 0) {
-            return "0 secs";
-        }
-
-        return sb.toString();
     }
 
     public void info_variaveis() {
