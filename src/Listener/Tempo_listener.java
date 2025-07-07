@@ -16,5 +16,10 @@ public interface Tempo_listener {
     
     void onAttTempo();
     
-    void attInTempos();
+    /**
+     *
+     * @param produto
+     * @param arquivo
+     */
+    void attInTempos(String produto, String arquivo);
 }

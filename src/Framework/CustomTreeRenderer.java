@@ -19,6 +19,18 @@ import javax.swing.tree.DefaultTreeCellRenderer;
  */
 public class CustomTreeRenderer extends DefaultTreeCellRenderer {
 
+    private Color corFundo;
+    private Color corTexto;
+    private Color corFundoSelecionado;
+    private Color corTextoSelecionado;
+
+    public CustomTreeRenderer(Color corFundo, Color corTexto, Color corFundoSelecionado, Color corTextoSelecionado) {
+        this.corFundo = corFundo;
+        this.corTexto = corTexto;
+        this.corFundoSelecionado = corFundoSelecionado;
+        this.corTextoSelecionado = corTextoSelecionado;
+    }
+
     private final Icon pastaIcon = new ImageIcon(getClass().getResource("/icon/pasta.png"));
     private final Icon arquivoIcon = new ImageIcon(getClass().getResource("/icon/arquivo.png"));
 
@@ -46,12 +58,12 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer {
         }
 
         // Configurações de cor
-        setBackground(new Color(30, 30, 30)); // Cor de fundo padrão
-        setForeground(new Color(221, 221, 211)); // Texto padrão
+        setBackground(corFundo); // Cor de fundo padrão
+        setForeground(corTexto); // Texto padrão
 
         if (sel) {
-            setBackground(new Color(30, 144, 255));   // Fundo de seleção
-            setForeground(new Color(255, 255, 255));  // Texto de seleção
+            setBackground(corFundo);   // Fundo de seleção
+            setForeground(corFundoSelecionado);  // Texto de seleção
         }
 
         setOpaque(true); // necessário para a cor de fundo aparecer

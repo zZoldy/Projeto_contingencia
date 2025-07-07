@@ -30,6 +30,7 @@ import view.Principal;
 import view.Tbl_news;
 import Listener.Tempo_listener;
 import java.time.Duration;
+import model.Tema;
 
 /**
  *
@@ -45,11 +46,14 @@ public class C_principal implements Tempo_listener {
 
     public static Properties config = Funcoes.init_properties();
 
+    public Tema tema;
+
     public C_principal(Principal view) {
         this.view = view;
     }
 
     public void init() {
+
         view.lbl_close.setVisible(false);
 
         view.lbl_tempo_producao_tempo.setVisible(false);
@@ -70,8 +74,18 @@ public class C_principal implements Tempo_listener {
         setTree();
         hora_atual();
 
+        tema = new Tema(view.pn_superior_1, view.pn_superior_2, view.pn_lateral_esquerdo, view.pn_inferior_1, view.pn_inferior_2, view.lbl_frame_open, view.lbl_close, view.lbl_in_jorn, view.lbl_in_jornal_tempo, view.lbl_tempo_producao, view.lbl_tempo_producao_tempo, view.lbl_out_jorn, view.lbl_out_jornal_tempo, view.lbl_encerramento, view.lbl_encerramento, view.lbl_stts_jornal, view.lbl_stts_jornal_tempo, view.tree_produto, view.mn_superior);
+
         for (String chave : config.stringPropertyNames()) {
             String valor = config.getProperty(chave);
+            if (chave.equals("Tema")) {
+                if (valor.equals("Default")) {
+                    tema.Desktop_default(config);
+                } else if (valor.equals("Dark")) {
+                    tema.Desktop_dark(config);
+                }
+            }
+
             if (chave.equals("last_file_open")) {
                 if (!valor.equals("")) {
                     File last_file_open = new File(valor);
@@ -80,6 +94,7 @@ public class C_principal implements Tempo_listener {
                     }
                 }
             }
+
         }
 
     }
@@ -110,11 +125,11 @@ public class C_principal implements Tempo_listener {
     }
 
     @Override
-    public void attInTempos() {
-        tempoEncerramento();
+    public void attInTempos(String produto, String arquivo) {
+        tempoEncerramento(produto, arquivo);
     }
 
-    public void tempoEncerramento() {
+    public void tempoEncerramento(String produto, String arquivo) {
         LocalTime encerramento = LocalTime.parse(view.lbl_encerramento_tempo.getText());
         LocalTime saida = LocalTime.parse(view.lbl_out_jornal_tempo.getText());
 
@@ -125,12 +140,38 @@ public class C_principal implements Tempo_listener {
         if (encerramento.isAfter(saida)) {
             mensagem = "Estouro " + Funcoes.formatarDuracao(diferenca.abs());
         } else if (encerramento.isBefore(saida)) {
-            mensagem = "Cabeça " + Funcoes.formatarDuracao(diferenca.abs());
+            mensagem = "Buraco " + Funcoes.formatarDuracao(diferenca.abs());
         } else {
             mensagem = "OK";
         }
 
-        view.lbl_stts_jornal_tempo.setText(mensagem);
+        try {
+            String chave = "Tempo_encerramento_" + produto + "_" + arquivo;
+            String valor = view.lbl_encerramento_tempo.getText();
+            config = Funcoes.salvarConfiguracao(chave, valor);
+
+            view.lbl_stts_jornal_tempo.setText(mensagem);
+        } catch (Exception e) {
+            System.err.println("\tErro ao carregar Tempo_encerramento na memória\n");
+            e.printStackTrace();
+        }
+    }
+
+    public void info_produto_arquivo(String produto, String arquivo) {
+        if (produto.equals("") || produto.isBlank()) {
+            if (tbl_news != null) {
+                produto = tbl_news.info.get(0);
+                System.out.println("P: " + produto);
+            }
+        }
+
+        if (arquivo.equals("") || arquivo.isBlank()) {
+            if (tbl_news != null) {
+                arquivo = tbl_news.info.get(1);
+                System.out.println("Arquivo: " + arquivo);
+            }
+        }
+        tempoEncerramento(produto, arquivo);
     }
 
     public void info_variaveis() {
@@ -202,7 +243,7 @@ public class C_principal implements Tempo_listener {
         });
 
         try {
-            Funcoes.processar_arquivo(recover, tbl_news.tbl_news);
+            Funcoes.processar_arquivo(recover, tbl_news.tbl_news, tema);
             init_lines_erro(recover);
         } catch (Exception e) {
             System.err.println("\tErro ao recuperar arquivo: \n" + e);
@@ -216,13 +257,12 @@ public class C_principal implements Tempo_listener {
 
     void info_file_init_frame() {
 
-        List<String> info_table = new ArrayList<>();
-
         String produto_info = new File(tree.getProcess_tree().getArquivo().getFile().getParent()).getName();
         String arquivo_info = tree.getProcess_tree().getArquivo().getFile().getName().replaceFirst("[.][^.]+$", "");
         view.lbl_frame_open.setText(produto_info + "-" + arquivo_info);
         tbl_news.controller.lauda = new Lauda(produto_info, arquivo_info);
 
+        List<String> info_table = new ArrayList<>();
         info_table.add(produto_info);
         info_table.add(arquivo_info);
 
@@ -251,6 +291,8 @@ public class C_principal implements Tempo_listener {
         view.lbl_in_jornal_tempo.setText(tbl_news.controller.getTempoEntrada());
         view.lbl_tempo_producao_tempo.setText(tbl_news.controller.getTempoProducao());
         view.lbl_out_jornal_tempo.setText(tbl_news.controller.getTempoSaida());
+        view.lbl_encerramento_tempo.setText(rescue_time_encerramento(produto_info, arquivo_info));
+        tempoEncerramento(produto_info, arquivo_info);
 
         tbl_news.setVisible(true);
         jInternal = true;
@@ -265,7 +307,7 @@ public class C_principal implements Tempo_listener {
             tbl_news.setSize(view.Desktop.getSize());
 
             try {
-                Funcoes.processar_arquivo(tree.getProcess_tree().getArquivo().getFile(), tbl_news.tbl_news);
+                Funcoes.processar_arquivo(tree.getProcess_tree().getArquivo().getFile(), tbl_news.tbl_news, tema);
                 init_lines_erro(tree.getProcess_tree().getArquivo().getFile());
             } catch (Exception e) {
                 System.err.println("\tErro ao processar arquivo: \n" + e);
@@ -408,6 +450,20 @@ public class C_principal implements Tempo_listener {
             String horario_formatado = agora.format(formato);
             view.lbl_horario.setText(horario_formatado);
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public String rescue_time_encerramento(String produto, String arquivo) {
+        String nome_chave = "Tempo_encerramento_" + produto + "_" + arquivo;
+        for (String chave : config.stringPropertyNames()) {
+            String valor = config.getProperty(chave);
+            if (chave.equals(nome_chave)) {
+                if (!valor.equals("00:00:00")) {
+                    System.out.println("Valor: " + valor);
+                    return valor;
+                }
+            }
+        }
+        return "00:00:00";
     }
 
 }

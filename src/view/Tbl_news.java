@@ -82,9 +82,6 @@ public class Tbl_news extends javax.swing.JInternalFrame {
                 controller.close_pop_up(); // Fecha popup ao começar nova seleção
             }
         });
-
-        jScrollPane1.getViewport().setBackground(new Color(100, 100, 100));
-
     }
 
     /**

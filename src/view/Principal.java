@@ -73,14 +73,7 @@ public class Principal extends javax.swing.JFrame {
             lbl_encerramento_tempo = new javax.swing.JFormattedTextField(mf);
             lbl_stts_jornal = new javax.swing.JLabel();
             lbl_stts_jornal_tempo = new javax.swing.JLabel();
-            jMenuBar1 = new javax.swing.JMenuBar(){
-                @Override
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    g.setColor(new Color(55,55,55)); // fundo escuro
-                    g.fillRect(0, 0, getWidth(), getHeight());
-                }
-            };
+            mn_superior = new javax.swing.JMenuBar();
             jMenu1 = new javax.swing.JMenu();
             jMenu3 = new javax.swing.JMenu();
             jMenu2 = new javax.swing.JMenu();
@@ -88,6 +81,8 @@ public class Principal extends javax.swing.JFrame {
             jMenu4 = new javax.swing.JMenu();
             jMenuItem5 = new javax.swing.JMenuItem();
             jMenuItem6 = new javax.swing.JMenuItem();
+            jMenu5 = new javax.swing.JMenu();
+            jMenuItem1 = new javax.swing.JMenuItem();
             jMenuItem2 = new javax.swing.JMenuItem();
             jMenuItem3 = new javax.swing.JMenuItem();
 
@@ -247,7 +242,6 @@ public class Principal extends javax.swing.JFrame {
             );
             pn_inferior_1Layout.setVerticalGroup(
                 pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(lbl_tempo_producao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pn_inferior_1Layout.createSequentialGroup()
                     .addGroup(pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -258,6 +252,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGap(0, 0, Short.MAX_VALUE))
                 .addComponent(lbl_in_jorn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lbl_in_jornal_tempo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_tempo_producao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
 
             pn_inferior_2.setBackground(new java.awt.Color(30, 30, 30));
@@ -362,12 +357,22 @@ public class Principal extends javax.swing.JFrame {
 
         jMenu1.setForeground(new java.awt.Color(255, 255, 255));
         jMenu1.setText("Preferências");
+        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenu1ActionPerformed(evt);
+            }
+        });
 
         jMenu3.setText("Tema");
 
         jMenu2.setText("Aplicação");
 
         jMenuItem4.setText("Modo");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem4);
 
         jMenu3.add(jMenu2);
@@ -384,6 +389,18 @@ public class Principal extends javax.swing.JFrame {
 
         jMenu1.add(jMenu3);
 
+        jMenu5.setText("Configurações");
+
+        jMenuItem1.setText("Formatar Tabelas");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem1);
+
+        jMenu1.add(jMenu5);
+
         jMenuItem2.setText("Imprimir Tabela");
         jMenu1.add(jMenuItem2);
 
@@ -395,9 +412,9 @@ public class Principal extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
-        jMenuBar1.add(jMenu1);
+        mn_superior.add(jMenu1);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(mn_superior);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -452,11 +469,6 @@ public class Principal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_DesktopComponentShown
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        // TODO add your handling code here:
-        controller.info_variaveis();
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
     private void lbl_closeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_closeMouseClicked
         // TODO add your handling code here:
         int confirm = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja fechar?", "Confirmação", JOptionPane.YES_NO_OPTION);
@@ -469,9 +481,28 @@ public class Principal extends javax.swing.JFrame {
     private void lbl_encerramento_tempoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lbl_encerramento_tempoKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            controller.tempoEncerramento();
+            controller.info_produto_arquivo("", "");
+            
         }
     }//GEN-LAST:event_lbl_encerramento_tempoKeyPressed
+
+    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenu1ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        controller.info_variaveis();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -515,7 +546,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -535,11 +567,12 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JLabel lbl_stts_jornal_tempo;
     public javax.swing.JLabel lbl_tempo_producao;
     public javax.swing.JLabel lbl_tempo_producao_tempo;
+    public javax.swing.JMenuBar mn_superior;
     private javax.swing.JPanel pn_desktop;
     private javax.swing.JPanel pn_fundo;
     public javax.swing.JPanel pn_inferior_1;
     public javax.swing.JPanel pn_inferior_2;
-    private javax.swing.JPanel pn_lateral_esquerdo;
+    public javax.swing.JPanel pn_lateral_esquerdo;
     public javax.swing.JPanel pn_superior_1;
     public javax.swing.JPanel pn_superior_2;
     public javax.swing.JTree tree_produto;

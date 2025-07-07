@@ -10,16 +10,15 @@ import Framework.Funcoes;
  *
  * @author Z D K
  */
-public class Prelim {
+public class Boletim_ctl1 {
 
     String[] coluna = {"PG", "EDICAO", "TIPO", "SUBTIPO", "ORIGEM", "RETRANCA", "REP", "LOC", "tCab", "tVT", "tMat", "MODI", "APV", "TEMPO", "ASSUNTO"};
     String[] linha;
     String produto;
 
-    public Prelim(String path, String produto) {
+    public Boletim_ctl1(String path, String produto) {
         this.produto = produto;
         this.linha = new String[]{"0", "", "", "", "", produto + " - " + Funcoes.data_atual(), "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""};
         Funcoes.criarCSV(path, coluna, null, linha);
     }
-
 }

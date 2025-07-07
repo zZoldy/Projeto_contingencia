@@ -38,7 +38,7 @@ import Listener.Tempo_listener;
 public class C_tbl_news {
 
     Tbl_news view;
-    public File arquivo;
+
     public Lauda lauda;
     public String tempo_entrada;
     public String tempo_producao;
@@ -253,7 +253,7 @@ public class C_tbl_news {
         if (listener != null) {
             listener.onAttTempo();
             listener.attSaidaJornal();
-            listener.attInTempos();
+            listener.attInTempos(view.info.get(0), view.info.get(1));
         }
     }
 
@@ -424,7 +424,7 @@ public class C_tbl_news {
         if (listener != null) {
             listener.onAttTempo();
             listener.attSaidaJornal();
-            listener.attInTempos();
+            listener.attInTempos(view.info.get(0), view.info.get(1));
         }
 
     }
@@ -442,7 +442,7 @@ public class C_tbl_news {
                 if (listener != null) {
                     listener.onTempoEntradaAtualizado(valor);
                     listener.attSaidaJornal();
-                    listener.attInTempos();
+                    listener.attInTempos(view.info.get(0), view.info.get(1));
                 }
 
                 return tempo_entrada;

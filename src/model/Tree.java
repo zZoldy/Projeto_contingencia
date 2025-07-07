@@ -17,6 +17,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import tables.Boletim_ctl1;
+import tables.Boletim_ctl2;
 import tables.Final;
 import tables.Formato;
 import tables.Prelim;
@@ -163,8 +165,16 @@ public class Tree {
 
                             } else if (nomeArquivo.equals("Prelim.csv")) {
                                 Final model_final = new Final(csv.getPath(), pasta.getName());
+
                             } else if (nomeArquivo.equals("Final.csv")) {
                                 Prelim prelim = new Prelim(csv.getPath(), pasta.getName());
+
+                            } else if (nomeArquivo.equals("BOLETIM_CTL1.csv")) {
+                                Boletim_ctl1 b_c1 = new Boletim_ctl1(csv.getPath(), pasta.getName());
+
+                            } else if (nomeArquivo.equals("BOLETIM_CTL2.csv")) {
+                                Boletim_ctl2 b_c2 = new Boletim_ctl2(csv.getPath(), pasta.getName());
+
                             }
                         }
                     } catch (IOException e) {
@@ -183,7 +193,6 @@ public class Tree {
         DefaultMutableTreeNode rootNode = nodeTree.toTreeNode();
 
         tree.setModel(new DefaultTreeModel(rootNode));
-        tree.setCellRenderer(new CustomTreeRenderer());
         tree.setUI(new javax.swing.plaf.basic.BasicTreeUI() {
             protected boolean isLocationInExpandControl(int row, int rowLevel, int x, int y) {
                 return false; // Permite que qualquer clique na linha seja tratado como clique no nó

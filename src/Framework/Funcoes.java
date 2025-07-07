@@ -4,6 +4,7 @@
  */
 package Framework;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -32,6 +33,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import model.Table;
+import model.Tema;
 
 public class Funcoes {
 
@@ -203,7 +205,7 @@ public class Funcoes {
     }
 
     // Funcoes Arquivo
-    public static void processar_arquivo(File file, JTable tabela) {
+    public static void processar_arquivo(File file, JTable tabela, Tema tema) {
         System.out.println("Procee: " + file.getPath());
 
         if (file == null || !file.exists()) {
@@ -241,7 +243,17 @@ public class Funcoes {
                 }
             }
 
-            Table.model_padrao(modelo, tabela);
+            tabela.setModel(modelo);
+
+            Table.model_padrao(tabela);
+
+            // Aplica renderizações visuais personalizadas
+            if (tema.modelo_tema.equals("Default")) {
+                tema.aplicar_cor_jtable(tabela, new Color(180,180,180), Color.BLACK, Color.WHITE, new Color(200, 200, 200), Color.BLACK, new Color(150, 150, 150), Color.BLACK, Color.GRAY, Color.orange, Color.GRAY, Color.orange);
+            } else if (tema.modelo_tema.equals("Dark")) {
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Erro geral ao processar o arquivo");
@@ -343,7 +355,8 @@ public class Funcoes {
             }
         } else {
             System.out.println("Arquivo de configuração não existe ainda.");
-            properties.setProperty("last_file_open", "");
+            properties.setProperty("Last_file_open", "");
+            properties.setProperty("Tema", "Default");
             try (FileOutputStream fos = new FileOutputStream(config)) {
                 properties.store(fos, "Arquivo de configuração gerado");
             } catch (IOException e) {
@@ -383,6 +396,11 @@ public class Funcoes {
         }
 
         return config;
+    }
+
+    // Caixa de Mensagem Interface
+    public static void message_error(String msg) {
+        JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
     }
 
 }

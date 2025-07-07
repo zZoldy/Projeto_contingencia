@@ -20,19 +20,6 @@ public class Arquivo {
     public Arquivo(String path_file, File file) {
         this.path_file = path_file;
         this.file = file;
-
-        if (file != null) {
-            if (file.isFile()) {
-                table = new Table();
-
-                String nome_arquivo = getFile().getName();
-                String nome_produto = new File(getFile().getParent()).getName();
-
-                table.modelo = nome_arquivo;
-                table.produto = nome_produto;
-
-            }
-        }
     }
 
     public File getFile() {
