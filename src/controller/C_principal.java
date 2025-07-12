@@ -29,7 +29,14 @@ import model.Tree;
 import view.Principal;
 import view.Tbl_news;
 import Listener.Tempo_listener;
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
 import java.time.Duration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 import model.Tema;
 
 /**
@@ -40,9 +47,13 @@ public class C_principal implements Tempo_listener {
 
     Principal view;
     Tbl_news tbl_news;
-    Tree tree;
+    List<JLabel> atalhos = new ArrayList<>();
+    public Tree tree;
+
+    public File back_file;
 
     boolean jInternal = false;
+    private boolean treeListenerAdicionado = false;
 
     public static Properties config = Funcoes.init_properties();
 
@@ -53,7 +64,43 @@ public class C_principal implements Tempo_listener {
     }
 
     public void init() {
+        def_labels_final();
+        setTree();
 
+        UIManager.put("Tree.drawsFocusBorderAroundIcon", false);
+        UIManager.put("Tree.drawDashedFocusIndicator", false);
+
+        hora_atual();
+
+        tema = new Tema(view.Desktop, view.pn_superior_1, view.pn_lateral_esquerdo, view.pn_inferior_1, view.pn_inferior_2, view.lbl_hora_atual, view.lbl_frame_open, view.lbl_close, view.lbl_in_jorn, view.lbl_in_jornal_tempo, view.lbl_tempo_producao, view.lbl_tempo_producao_tempo, view.lbl_out_jorn, view.lbl_out_jornal_tempo, view.lbl_encerramento, view.lbl_encerramento_tempo, view.lbl_stts_jornal, view.lbl_stts_jornal_tempo, view.tree_produto, view.mn_superior);
+
+        for (String chave : config.stringPropertyNames()) {
+            String valor = config.getProperty(chave);
+            if (chave.equals("Tema")) {
+                if (valor.equals("Default")) {
+                    tema.Desktop_default(config);
+                    view.mn_item_modo_tema.setText("Mudar para o Modo Escuro");
+                } else if (valor.equals("Dark")) {
+                    tema.Desktop_dark(config);
+                    view.mn_item_modo_tema.setText("Mudar para o Modo Claro");
+
+                }
+            }
+
+            if (chave.equals("last_file_open")) {
+                if (!valor.equals("")) {
+                    File last_file_open = new File(valor);
+                    if (last_file_open.exists()) {
+                        init_frame(last_file_open);
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    void def_labels_final() {
         view.lbl_close.setVisible(false);
 
         view.lbl_tempo_producao_tempo.setVisible(false);
@@ -70,33 +117,40 @@ public class C_principal implements Tempo_listener {
 
         view.lbl_stts_jornal.setVisible(false);
         view.lbl_stts_jornal_tempo.setVisible(false);
+    }
 
-        setTree();
-        hora_atual();
-
-        tema = new Tema(view.pn_superior_1, view.pn_superior_2, view.pn_lateral_esquerdo, view.pn_inferior_1, view.pn_inferior_2, view.lbl_frame_open, view.lbl_close, view.lbl_in_jorn, view.lbl_in_jornal_tempo, view.lbl_tempo_producao, view.lbl_tempo_producao_tempo, view.lbl_out_jorn, view.lbl_out_jornal_tempo, view.lbl_encerramento, view.lbl_encerramento, view.lbl_stts_jornal, view.lbl_stts_jornal_tempo, view.tree_produto, view.mn_superior);
-
-        for (String chave : config.stringPropertyNames()) {
-            String valor = config.getProperty(chave);
-            if (chave.equals("Tema")) {
-                if (valor.equals("Default")) {
-                    tema.Desktop_default(config);
-                } else if (valor.equals("Dark")) {
-                    tema.Desktop_dark(config);
-                }
-            }
-
-            if (chave.equals("last_file_open")) {
-                if (!valor.equals("")) {
-                    File last_file_open = new File(valor);
-                    if (last_file_open.exists()) {
-                        recover_file_open(last_file_open);
-                    }
-                }
-            }
-
+    public void tema_dark() {
+        if (tbl_news != null) {
+            tema.JTable_dark(tbl_news.tbl_news);
         }
+        tema.Desktop_dark(config);
+        view.mn_item_modo_tema.setText("Mudar para o Modo Claro");
+    }
 
+    public void tema_default() {
+        if (tbl_news != null) {
+            tema.JTable_default(tbl_news.tbl_news);
+        }
+        tema.Desktop_default(config);
+        view.mn_item_modo_tema.setText("Mudar para o Modo Escuro");
+    }
+
+    public void choose_tema() {
+        System.out.println("Tema IN: " + Tema.modelo_tema);
+        if (Tema.modelo_tema.equals("Default")) {
+            tema_dark();
+        } else if (Tema.modelo_tema.equals("Dark")) {
+            tema_default();
+        }
+        System.out.println("Tema OUT: " + Tema.modelo_tema);
+    }
+
+    public void def_tema_table() {
+        if (Tema.modelo_tema.equals("Default")) {
+            Tema.JTable_default(tbl_news.tbl_news);
+        } else if (Tema.modelo_tema.equals("Dark")) {
+            Tema.JTable_dark(tbl_news.tbl_news);
+        }
     }
 
     /**
@@ -111,9 +165,13 @@ public class C_principal implements Tempo_listener {
     @Override
     public void onAttTempo() {
         if (tbl_news.info.get(1).equals("Prelim")) {
-            tbl_news.controller.tempo_prelim(tbl_news.tbl_news);
+            tbl_news.controller.tempo_prelim_bo(tbl_news.tbl_news);
         } else if (tbl_news.info.get(1).equals("Final")) {
             tbl_news.controller.tempo_final(tbl_news.tbl_news);
+        } else if (tbl_news.info.get(1).equals("BOLETIM_CTL1")) {
+            tbl_news.controller.tempo_prelim_bo(tbl_news.tbl_news);
+        } else if (tbl_news.info.get(1).equals("BOLETIM_CTL2")) {
+            tbl_news.controller.tempo_prelim_bo(tbl_news.tbl_news);
         }
 
         view.lbl_tempo_producao_tempo.setText(tbl_news.controller.getTempoProducao());
@@ -126,31 +184,37 @@ public class C_principal implements Tempo_listener {
 
     @Override
     public void attInTempos(String produto, String arquivo) {
-        tempoEncerramento(produto, arquivo);
+        tempoEncerramento(produto, arquivo, view.lbl_stts_jornal_tempo);
     }
 
-    public void tempoEncerramento(String produto, String arquivo) {
+    public void tempoEncerramento(String produto, String arquivo, JLabel label) {
         LocalTime encerramento = LocalTime.parse(view.lbl_encerramento_tempo.getText());
         LocalTime saida = LocalTime.parse(view.lbl_out_jornal_tempo.getText());
 
-        Duration diferenca = Duration.between(encerramento, saida);
+        Duration diferenca = Duration.between(encerramento, saida).abs();
 
         String mensagem;
 
+        Color cor;
+
         if (encerramento.isAfter(saida)) {
-            mensagem = "Estouro " + Funcoes.formatarDuracao(diferenca.abs());
+            mensagem = "Buraco " + Funcoes.formatarDuracao(diferenca);
+            cor = new Color(255, 204, 0); // Amarelo
         } else if (encerramento.isBefore(saida)) {
-            mensagem = "Buraco " + Funcoes.formatarDuracao(diferenca.abs());
+            mensagem = "Estouro " + Funcoes.formatarDuracao(diferenca);
+            cor = new Color(255, 51, 51); // Vermelho
         } else {
             mensagem = "OK";
+            cor = new Color(0, 153, 0); // Verde
         }
 
         try {
             String chave = "Tempo_encerramento_" + produto + "_" + arquivo;
             String valor = view.lbl_encerramento_tempo.getText();
-            config = Funcoes.salvarConfiguracao(chave, valor);
+            Funcoes.salvarConfiguracao(config, chave, valor);
 
-            view.lbl_stts_jornal_tempo.setText(mensagem);
+            label.setText(mensagem);
+            label.setForeground(cor);
         } catch (Exception e) {
             System.err.println("\tErro ao carregar Tempo_encerramento na memória\n");
             e.printStackTrace();
@@ -171,21 +235,51 @@ public class C_principal implements Tempo_listener {
                 System.out.println("Arquivo: " + arquivo);
             }
         }
-        tempoEncerramento(produto, arquivo);
+        tempoEncerramento(produto, arquivo, view.lbl_stts_jornal_tempo);
     }
 
     public void info_variaveis() {
         // System.out.println(tree);
-        Component[] componentes = view.Desktop.getComponents();
-        System.out.println("Componentes no DesktopPane:");
+        Component[] componentes = view.pn_superior_1.getComponents();
+        System.out.println("Componentes no Painel Superior:");
+
+        int cont = 0;
         for (Component c : componentes) {
-            System.out.println("- " + c.getClass().getName() + " | Visible: " + c.isVisible());
-            System.out.println("Dimension: " + c.getSize());
+            System.out.println("- " + cont + " | Visible: " + c.isVisible());
+            cont++;
         }
 
-        System.out.println("PROD: " + tbl_news.controller.tempo_producao);
-        System.out.println("IN: " + tbl_news.controller.tempo_entrada);
+        System.out.println("Quantidade Total: " + cont);
+        System.out.println("\n\tConfig");
+        System.out.println(config);
 
+        System.out.println("Boolean jInternal: " + jInternal);
+        System.out.println("File Backup: " + back_file);
+
+        System.out.println("\n\tTree");
+        System.out.println("Tree Name - " + tree.getProcess_tree().getNome());
+        System.out.println("File Name - " + tree.getProcess_tree().getArquivo().getFile());
+        System.out.println("Tree:" + tree);
+        System.out.println("Node: " + tree.getProcess_tree());
+
+        System.out.println("Infomações de Memória");
+        System.out.println("Estrutura Tree: " + tree.getProcess_tree().getArquivo().getFile());
+        System.out.println("Arquivo em Memória: " + this.back_file);
+        System.out.println("Referência JInternalFrame: " + ((tbl_news == null) ? "Nulo" : "Referenciado"));
+        String estadoTabela = (tbl_news == null || tbl_news.tbl_news == null) ? "Nulo" : "Referenciado";
+        System.out.println("Referência JTable: " + estadoTabela);
+    }
+
+    public String memoria_app() {
+        System.gc(); // Sugere ao GC que rode
+        try {
+            Thread.sleep(500); // Dá tempo pro GC processar
+        } catch (InterruptedException ex) {
+            Logger.getLogger(C_principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        long memoriaUsada = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        double memoria = memoriaUsada / 1024;
+        return String.valueOf(memoria);
     }
 
     public void setTree() {
@@ -193,80 +287,77 @@ public class C_principal implements Tempo_listener {
         tree.treeModel(view.tree_produto);
     }
 
-    public void process_init_table(MouseEvent evt) {
-        NodeTree node_select = tree.node_select(view.tree_produto, evt);
-
-        if (node_select != null) {
-            if (!jInternal) {
-                tree.setProcess_tree(node_select);
-                if (tree.getProcess_tree().isArquivo()) {
-                    init_frame();
-                }
-            }
-        } else {
-            System.err.println("Click Fora");
+    public void process_init_table_jtree() {
+        if (treeListenerAdicionado) {
+            return; // já foi adicionado
         }
-    }
+        view.tree_produto.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
+                    NodeTree node_select = tree.node_select(view.tree_produto, evt);
 
-    public void init_lines_erro(File file) {
-        String produto = new File(file.getParent()).getName();
-        String arquivo = file.getName().replaceFirst("[.][^.]+$", "");
-
-        String chave_lines_erro = "LinhasComErro_" + produto + "_" + arquivo;
-
-        for (String chave : config.stringPropertyNames()) {
-            if (chave.equals(chave_lines_erro)) {
-                String valor = config.getProperty(chave);
-                if (valor != null && !valor.trim().isEmpty()) {
-                    String[] lines = valor.split(",");
-                    for (String line : lines) {
-                        try {
-                            Table.linhasComErroDeTempo.add(Integer.valueOf(line.trim()));
-                        } catch (NumberFormatException ex) {
-                            System.err.println("Erro ao converter linha de erro: " + line);
-                            ex.printStackTrace();
-                        }
+                    if (node_select != null && node_select.isArquivo()) {
+                        init_frame(node_select.getArquivo().getFile());
                     }
                 }
             }
+        });
+
+        treeListenerAdicionado = true;
+    }
+
+    public void init_frame(File file) {
+        System.out.println(">>> CHAMOU init_frame | jInternal = " + jInternal);
+
+        if (!jInternal) {
+            open_file(file);
+        } else if (jInternal) {
+            boolean confirm = Funcoes.message_confirm(null, "Deseja fechar a tabela atual?", "Arquivo em instância");
+            if (confirm) {
+                process_close_table();
+                open_file(file);
+            }
         }
     }
 
-    public void recover_file_open(File recover) {
-        tbl_news = new Tbl_news();
+    void open_file(File file) {
+        tbl_news = new Tbl_news(file);
+        tbl_news.controller.configurarAjusteAutomatico(tbl_news.tbl_news);
         tbl_news.controller.setListener(this);
 
         SwingUtilities.invokeLater(() -> {
             tbl_news.setSize(view.Desktop.getSize());
             view.Desktop.add(tbl_news);
-            tbl_news.setVisible(true);
         });
 
         try {
-            Funcoes.processar_arquivo(recover, tbl_news.tbl_news, tema);
-            init_lines_erro(recover);
+            Funcoes.processar_arquivo(file, tbl_news.tbl_news);
+            tbl_news.controller.configurarAjusteAutomatico(tbl_news.tbl_news);
+
+            Funcoes.init_lines_erro(file, config);
         } catch (Exception e) {
-            System.err.println("\tErro ao recuperar arquivo: \n" + e);
+            System.err.println("\tErro ao processar arquivo: \n" + e);
             return;
         }
 
-        tree.getProcess_tree().getArquivo().setFile(recover);
+        this.jInternal = true;
+        this.back_file = file;
 
-        info_file_init_frame();
+        info_file_init_frame(file);
+
+        onAttTempo();
+
+        Funcoes.salvarConfiguracao(config, "last_file_open", file.getPath());
+
     }
 
-    void info_file_init_frame() {
+    void info_file_init_frame(File file) {
+        String produto_info = new File(file.getParent()).getName();
+        String arquivo_info = file.getName().replaceFirst("[.][^.]+$", "");
 
-        String produto_info = new File(tree.getProcess_tree().getArquivo().getFile().getParent()).getName();
-        String arquivo_info = tree.getProcess_tree().getArquivo().getFile().getName().replaceFirst("[.][^.]+$", "");
         view.lbl_frame_open.setText(produto_info + "-" + arquivo_info);
         tbl_news.controller.lauda = new Lauda(produto_info, arquivo_info);
-
-        List<String> info_table = new ArrayList<>();
-        info_table.add(produto_info);
-        info_table.add(arquivo_info);
-
-        tbl_news.info = info_table;
 
         view.lbl_close.setVisible(true);
         view.lbl_close.setText("Clique para fechar");
@@ -292,45 +383,20 @@ public class C_principal implements Tempo_listener {
         view.lbl_tempo_producao_tempo.setText(tbl_news.controller.getTempoProducao());
         view.lbl_out_jornal_tempo.setText(tbl_news.controller.getTempoSaida());
         view.lbl_encerramento_tempo.setText(rescue_time_encerramento(produto_info, arquivo_info));
-        tempoEncerramento(produto_info, arquivo_info);
+        tempoEncerramento(produto_info, arquivo_info, view.lbl_stts_jornal_tempo);
+
+        def_tema_table();
 
         tbl_news.setVisible(true);
-        jInternal = true;
     }
 
-    public void init_frame() {
-
-        if (!jInternal) {
-            tbl_news = new Tbl_news();
-            tbl_news.controller.setListener(this);
-
-            tbl_news.setSize(view.Desktop.getSize());
-
-            try {
-                Funcoes.processar_arquivo(tree.getProcess_tree().getArquivo().getFile(), tbl_news.tbl_news, tema);
-                init_lines_erro(tree.getProcess_tree().getArquivo().getFile());
-            } catch (Exception e) {
-                System.err.println("\tErro ao processar arquivo: \n" + e);
-                return;
-            }
-
-            view.Desktop.add(tbl_news);
-            info_file_init_frame();
-
-            config = Funcoes.salvarConfiguracao("last_file_open", tree.getProcess_tree().getArquivo().getFile().getPath());
-
-        }
-    }
-
-    public void close_frame() {
+    public void close_frame(File file) {
         if (jInternal) {
             try {
-                Funcoes.save_file(tbl_news.tbl_news, tree.getProcess_tree().getArquivo().getFile());
+                Funcoes.save_file(tbl_news.tbl_news, file);
                 if (tbl_news.controller.lauda.ver_stts_lauda()) {
                     System.out.println("Lauda salva pae");
-
                 }
-
             } catch (Exception e) {
                 System.err.println("\nErro ao salvar Arquivo\n" + e);
             }
@@ -341,10 +407,11 @@ public class C_principal implements Tempo_listener {
         if (jInternal) {
             tbl_news.controller.close_pop_up();
             try {
-                Funcoes.save_file(tbl_news.tbl_news, tree.getProcess_tree().getArquivo().getFile());
+                Funcoes.save_file(tbl_news.tbl_news, back_file);
             } catch (Exception e) {
                 System.err.println("\nErro ao salvar Arquivo\n" + e);
             }
+
             tbl_news.controller.lauda = new Lauda("", "");
 
             view.lbl_tempo_producao_tempo.setVisible(false);
@@ -363,17 +430,21 @@ public class C_principal implements Tempo_listener {
             view.lbl_stts_jornal_tempo.setVisible(false);
 
             view.lbl_close.setVisible(false);
-            view.lbl_frame_open.setText("Nenhum arquivo em uso");
+            view.lbl_frame_open.setText("");
 
-            jInternal = false;
+            this.jInternal = false;
+
+            this.back_file = null;
 
             tree.attNode(tree.getProcess_tree());
 
-            config = Funcoes.salvarConfiguracao("last_file_open", "");
+            Funcoes.salvarConfiguracao(config, "last_file_open", "");
             Table.linhasComErroDeTempo.clear();
 
-            tbl_news.dispose();
-            tbl_news = null;
+            tbl_news.tbl_news.setModel(new DefaultTableModel()); // limpa conteúdo
+            tbl_news.tbl_news = null; // remove referência
+            tbl_news.dispose();       // fecha janela
+            tbl_news = null;          // remove frame
         }
     }
 
@@ -390,11 +461,32 @@ public class C_principal implements Tempo_listener {
 
             if (!node_select.isArquivo()) {
                 JMenuItem pop = new JMenuItem("Pasta ");
-                System.out.println("Click: " + node_select.getNome());
                 popUp.add(pop);
             } else {
                 JMenuItem pop = null;
-                System.out.println("Click: " + node_select.getNome());
+
+                if (view.pn_superior_1.isVisible()) {
+                    JMenuItem criarAtalho = new JMenuItem("Criar Atalho no Painel");
+                    criarAtalho.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            JLabel label_atalho = Funcoes.addAtalho_inTree_soutPanel(node_select, view.pn_superior_1, atalhos, label -> Funcoes.jlabel_arrastado(atalhos, label, view.pn_superior_1), tema.modelo_tema);
+                            if (label_atalho != null) {
+                                label_atalho.addMouseListener(new MouseAdapter() {
+                                    @Override
+                                    public void mouseClicked(MouseEvent e) {
+                                        if (SwingUtilities.isLeftMouseButton(e)) {
+                                            File f = (File) label_atalho.getClientProperty("file");
+                                            init_frame(f);
+                                        }
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                    popUp.add(criarAtalho);
+                }
 
                 if (node_select.getNome().equals("Formato")) {
                     pop = new JMenuItem("Enviar para Prelim");
@@ -402,15 +494,13 @@ public class C_principal implements Tempo_listener {
                         @Override
                         public void actionPerformed(ActionEvent e) {
 
-                            ver_table_open(tree.getProcess_tree().getArquivo().getFile());
-
                             File parent_formato = new File(node_select.getArquivo().getFile().getParent());
                             File prelim = new File(parent_formato, "Prelim.csv");
 
                             try {
                                 Funcoes.copy_file(node_select.getArquivo().getFile(), prelim);
-                                tree.getProcess_tree().getArquivo().setFile(prelim);
-                                init_frame();
+                                backup_prelim(prelim);
+                                ver_table_open(back_file);
                             } catch (Exception ex) {
                                 System.err.println("\tErro ao copiar Formato/Prelim\n" + ex);
                             }
@@ -418,7 +508,6 @@ public class C_principal implements Tempo_listener {
                             JOptionPane.showMessageDialog(null, "Item Copiado com sucesso");
                         }
                     });
-
                 }
 
                 if (pop != null) {
@@ -464,6 +553,47 @@ public class C_principal implements Tempo_listener {
             }
         }
         return "00:00:00";
+    }
+
+    public File backup_prelim(File file) {
+        File path_backup = new File(file.getParent(), "Backup Prelim");
+        if (!path_backup.exists() || !path_backup.isDirectory()) {
+            path_backup.mkdirs();
+            JOptionPane.showMessageDialog(null, "Diretório de Produto criado com sucesso: " + file.getPath());
+        }
+
+
+
+        return path_backup;
+    }
+
+    public void format_produto() {
+        boolean reset_prod = Funcoes.message_confirm(null, "Deseja resetar a pasta Produto?", "Formatar Produto");
+
+        if (reset_prod) {
+            process_close_table();
+
+            try {
+                if (!deleteRecursively(tree.getProcess_tree().getArquivo().getFile())) {
+                    System.err.println("Erro: não foi possível excluir o arquivo Produto.");
+                }
+            } catch (Exception e) {
+                System.err.println("\nErro ao excluir Produtos - \n" + e);
+            }
+
+            tree.attNode(tree.getProcess_tree());
+
+        }
+
+    }
+
+    public boolean deleteRecursively(File file) {
+        if (file.isDirectory()) {
+            for (File child : file.listFiles()) {
+                deleteRecursively(child);
+            }
+        }
+        return file.delete();
     }
 
 }

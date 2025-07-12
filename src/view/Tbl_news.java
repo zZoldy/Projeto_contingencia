@@ -6,22 +6,23 @@ package view;
 
 import Framework.Funcoes;
 import controller.C_tbl_news;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.Timer;
+import model.Tema;
 
 /**
  *
@@ -29,7 +30,9 @@ import javax.swing.Timer;
  */
 public class Tbl_news extends javax.swing.JInternalFrame {
 
-    public List<String> info;
+    public List<String> info = new ArrayList<>();
+    File file;
+
     AtomicBoolean delete = new AtomicBoolean(true);
     AtomicBoolean create = new AtomicBoolean(true);
 
@@ -38,8 +41,16 @@ public class Tbl_news extends javax.swing.JInternalFrame {
      */
     public C_tbl_news controller;
 
-    public Tbl_news() {
+    public Tbl_news(File file) {
+        this.file = file;
+        String produto_info = new File(file.getParent()).getName();
+        String arquivo_info = file.getName().replaceFirst("[.][^.]+$", "");
+
+        info.add(produto_info);
+        info.add(arquivo_info);
+
         controller = new C_tbl_news(this);
+
         initComponents();
 
         // Remove a barra de título, mas mantém a borda
@@ -76,12 +87,6 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             }
         });
 
-        tbl_news.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                controller.close_pop_up(); // Fecha popup ao começar nova seleção
-            }
-        });
     }
 
     /**
@@ -125,6 +130,9 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             }
         ));
         tbl_news.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tbl_newsMousePressed(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 tbl_newsMouseReleased(evt);
             }
@@ -138,12 +146,13 @@ public class Tbl_news extends javax.swing.JInternalFrame {
             }
         });
         jScrollPane1.setViewportView(tbl_news);
+        jScrollPane1.setBorder(BorderFactory.createEmptyBorder());
 
         javax.swing.GroupLayout pn_fundoLayout = new javax.swing.GroupLayout(pn_fundo);
         pn_fundo.setLayout(pn_fundoLayout);
         pn_fundoLayout.setHorizontalGroup(
             pn_fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
         );
         pn_fundoLayout.setVerticalGroup(
             pn_fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,8 +228,18 @@ public class Tbl_news extends javax.swing.JInternalFrame {
                 return;
             }
             controller.lauda.lauda(tbl_news, pn_fundo);
+            if (Tema.modelo_tema.equals("Default")) {
+                Tema.JTable_default(tbl_news);
+            } else if (Tema.modelo_tema.equals("Dark")) {
+                Tema.JTable_dark(tbl_news);
+            }
         }
 
+        if (evt.getKeyCode() == KeyEvent.VK_F9 && evt.isControlDown()) {
+            if (info.get(1).equals("Prelim") || info.get(1).equals("BOLETIM_CTL1") || info.get(1).equals("BOLETIM_CTL2")) {
+                controller.prelim_to_final(tbl_news, file);
+            }
+        }
         if (info.get(1).equals("Formato")) {
             JOptionPane.showMessageDialog(null, "Tabela não permite digitação!", "Alerta", JOptionPane.WARNING_MESSAGE);
         }
@@ -236,10 +255,10 @@ public class Tbl_news extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             controller.ajustar_largura_colunas(tbl_news);
-            
+
             controller.add_tempo_entrada(tbl_news);
             controller.in_tMat(tbl_news);
-            
+
         }
 
     }//GEN-LAST:event_tbl_newsKeyReleased
@@ -248,6 +267,11 @@ public class Tbl_news extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         controller.tempo_linhas_selecionadas(tbl_news);
     }//GEN-LAST:event_tbl_newsMouseReleased
+
+    private void tbl_newsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_newsMousePressed
+        // TODO add your handling code here:
+        controller.close_pop_up(); // Fecha popup ao começar nova seleção
+    }//GEN-LAST:event_tbl_newsMousePressed
 
     void info_variavel() {
         for (String infos : info) {

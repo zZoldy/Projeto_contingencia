@@ -16,9 +16,8 @@ public class Formato {
 
     String[] colunas = {"PG", "EDICAO", "TIPO", "SUBTIPO", "ORIGEM", "RETRANCA", "REP", "LOC", "tCab", "tVT", "tMat", "MODI", "APV", "TEMPO", "ASSUNTO"};
     List<String[]> linhas;
-    String produto;
 
-    public List<String[]> linhas_format() {
+    public List<String[]> linhas_format(String produto, String arquivo) {
         List<String[]> l = new ArrayList<>();
         int total_lines = 70;
 
@@ -26,7 +25,7 @@ public class Formato {
 
             switch (c) {
                 case 0:
-                    l.add(new String[]{String.valueOf(c), "", "", "", "", produto + " - " + Funcoes.data_atual(), "", "", "00:00", "", "00:00", "", "", "00:00:00", ""});
+                    l.add(new String[]{String.valueOf(c), "", "", "", "", produto + "  -  " + arquivo, "", "", "00:00", "", "00:00", "", "", "00:00:00", ""});
                     break;
 
                 case 15:
@@ -74,11 +73,10 @@ public class Formato {
         return l;
     }
 
-    public Formato(String path, String produto) {
-        this.produto = produto;
-        this.linhas = linhas_format();
+    public Formato(String path, String produto, String arquivo) {
+        this.linhas = linhas_format(produto, arquivo);
         try {
-            Funcoes.criarCSV(path, colunas, linhas, null);
+            Funcoes.criarCSV(path, colunas, linhas);
         } catch (Exception e) {
             System.err.println("\tErro ao criar Arquivo Formato\n" + e);
         }

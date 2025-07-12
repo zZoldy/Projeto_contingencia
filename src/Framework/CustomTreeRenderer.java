@@ -62,11 +62,12 @@ public class CustomTreeRenderer extends DefaultTreeCellRenderer {
         setForeground(corTexto); // Texto padrão
 
         if (sel) {
-            setBackground(corFundo);   // Fundo de seleção
-            setForeground(corFundoSelecionado);  // Texto de seleção
+            setBackground(corFundoSelecionado);   // Fundo de seleção
+            setForeground(corTextoSelecionado);  // Texto de seleção
         }
 
         setOpaque(true); // necessário para a cor de fundo aparecer
+        setBorder(null);
         return this;
     }
 }

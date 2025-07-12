@@ -5,6 +5,8 @@
 package tables;
 
 import Framework.Funcoes;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -13,13 +15,12 @@ import Framework.Funcoes;
 public class Final {
 
     String[] coluna = {"PG", "EDICAO", "TIPO", "SUBTIPO", "ORIGEM", "RETRANCA", "REP", "LOC", "tCab", "tVT", "tMat", "MODI", "APV", "TEMPO", "ASSUNTO"};
-    String[] linha;
-    String produto;
+    List<String[]> linhas = new ArrayList<>();
 
-    public Final(String path, String produto) {
-        this.produto = produto;
-        this.linha = new String[]{"0", "", "", "", "", produto + " - " + Funcoes.data_atual(), "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""};
-        Funcoes.criarCSV(path, coluna, null, linha);
+    public Final(String path, String produto, String arquivo) {
+        this.linhas.add(new String[]{"0", "", "", "", "", produto + "  -  " + arquivo, "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""});
+        this.linhas.add(new String[]{"1", "", "", "", "", "", "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""});
+        Funcoes.criarCSV(path, coluna, linhas);
     }
 
 }

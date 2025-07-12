@@ -21,7 +21,13 @@ public class Desktop_image extends JDesktopPane {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (imagemFundo != null) {
-            g.drawImage(imagemFundo, 0, 0, getWidth(), getHeight(), this);
+            int novoWidth = 300;
+            int novoHeight = 300;
+
+            int x = (getWidth() - novoWidth) / 2;
+            int y = (getHeight() - novoHeight) / 2;
+
+            g.drawImage(imagemFundo, x, y, novoWidth, novoHeight, this);
         }
     }
 

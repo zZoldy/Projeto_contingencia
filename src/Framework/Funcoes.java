@@ -5,8 +5,17 @@
 package Framework;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,9 +27,14 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -28,14 +42,384 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import model.NodeTree;
 import model.Table;
 import model.Tema;
 
 public class Funcoes {
+
+// Constantes para blocos e layout 
+    private static final int NUM_LINHAS = 2;
+    private static final int NUM_COLUNAS = 8;
+    private static final int ESPACAMENTO = 10;
+    private static final int BLOCO_LARGURA = 140;
+    private static final int BLOCO_ALTURA = 30;
+
+    public static void install() {
+
+    }
+
+    public static JLabel addAtalho_inTree_soutPanel(NodeTree node, JPanel destino, List<JLabel> lista, Consumer<JLabel> dragHandler, String tema) {
+        // Garante que o layout esteja atualizado
+        System.out.println("Largura do painel: " + destino.getWidth() + ", Altura: " + destino.getHeight());
+
+        destino.doLayout();
+
+        System.out.println("Largura do painel: " + destino.getWidth() + ", Altura: " + destino.getHeight());
+
+        File fileDoNode = node.getArquivo().getFile();
+
+        // Verifica duplicata
+        for (JLabel lbl : lista) {
+            File fileExistente = (File) lbl.getClientProperty("file");
+            if (fileExistente != null && fileExistente.equals(fileDoNode)) {
+                System.out.println("Atalho já existe para: " + fileDoNode.getName());
+                return null;
+            }
+        }
+
+        // Limite máximo de atalhos
+        if (lista.size() >= 8) {
+            System.out.println("Limite de 8 atalhos atingido.");
+            return null;
+        }
+
+        String produto_info = new File(fileDoNode.getParent()).getName();
+        String nome_table = node.getNome();
+
+        JLabel atalho;
+        if ("BOLETIM_CTL1".equals(nome_table)) {
+            atalho = new JLabel("BO_CTL1 - " + produto_info);
+        } else if ("BOLETIM_CTL2".equals(nome_table)) {
+            atalho = new JLabel("BO_CTL2 - " + produto_info);
+        } else {
+            atalho = new JLabel(nome_table + " - " + produto_info);
+        }
+
+        atalho.setOpaque(true);
+
+        if ("Default".equals(tema)) {
+            Tema.def_tema_default_atalho(atalho);
+        } else if ("Dark".equals(tema)) {
+            Tema.def_tema_dark_atalho(atalho);
+        }
+
+        atalho.setHorizontalAlignment(SwingConstants.CENTER);
+        atalho.setVerticalAlignment(SwingConstants.CENTER);
+
+        atalho.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        atalho.setSize(BLOCO_LARGURA, BLOCO_ALTURA);
+
+        List<Rectangle> blocos = calcularBlocos(destino.getWidth());
+
+        Set<Rectangle> blocosIndisponiveis = blocos.stream()
+                .filter(b -> !blocoVisivel(b, destino))
+                .collect(Collectors.toSet());
+
+        Rectangle blocoLivre = null;
+        for (Rectangle bloco : blocos) {
+            if (blocosIndisponiveis.contains(bloco)) {
+                continue;
+            }
+
+            boolean ocupado = false;
+            for (JLabel existente : lista) {
+                if (bloco.intersects(existente.getBounds())) {
+                    ocupado = true;
+                    break;
+                }
+            }
+            if (!ocupado) {
+                blocoLivre = bloco;
+                break;
+            }
+        }
+
+        if (blocoLivre == null) {
+            System.out.println("Todos os blocos disponíveis estão ocupados ou fora da tela.");
+            return null;
+        }
+
+// posiciona com tamanho do blocoLivre...
+        atalho.setSize(blocoLivre.width, blocoLivre.height);
+        atalho.setLocation(blocoLivre.x, blocoLivre.y);
+        atalho.putClientProperty("file", fileDoNode);
+        atalho.putClientProperty("nome", nome_table);
+        atalho.putClientProperty("relX", (double) blocoLivre.x / destino.getWidth());
+        atalho.putClientProperty("relY", (double) blocoLivre.y / destino.getHeight());
+
+        // Popup menu e arrastável
+        pop_menu_atalho(destino, atalho, lista, dragHandler);
+
+        return atalho;
+    }
+
+    public static void pop_menu_atalho(JPanel destino, JLabel atalho, List<JLabel> lista, Consumer<JLabel> dragHandler) {
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem removerItem = new JMenuItem("Remover atalho");
+
+        removerItem.addActionListener(e -> {
+            destino.remove(atalho);
+            lista.remove(atalho);
+            destino.revalidate();
+            destino.repaint();
+        });
+
+        popupMenu.add(removerItem);
+
+        atalho.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    popupMenu.show(atalho, e.getX(), e.getY());
+                }
+            }
+        });
+
+        if (destino.getClientProperty("resizeListenerAdded") == null) {
+            destino.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    reposicionarAtalhosRelativos(destino, lista);
+                }
+            });
+            destino.putClientProperty("resizeListenerAdded", true);
+        }
+
+        dragHandler.accept(atalho); // Tornar arrastável
+        lista.add(atalho);
+        destino.add(atalho);
+        destino.revalidate();
+        destino.repaint();
+    }
+
+    public static void jlabel_arrastado(List<JLabel> atalhos, JLabel label, JPanel panel) {
+        final Point[] offset = {null};
+
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                offset[0] = e.getPoint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                // Ao soltar o mouse, "gruda" o label no bloco mais próximo e livre
+                Rectangle melhorBloco = null;
+                double menorDistancia = Double.MAX_VALUE;
+
+                List<Rectangle> blocos = calcularBlocos(panel.getWidth());
+
+                for (Rectangle bloco : blocos) {
+                    if (!blocoVisivel(bloco, panel)) {
+                        continue;
+                    }
+
+                    boolean ocupado = false;
+
+                    for (JLabel outro : atalhos) {
+                        if (outro != label && bloco.intersects(outro.getBounds())) {
+                            ocupado = true;
+                            break;
+                        }
+                    }
+                    if (!ocupado) {
+                        // calcula distância do centro do label até centro do bloco
+                        int centroLabelX = label.getX() + label.getWidth() / 2;
+                        int centroLabelY = label.getY() + label.getHeight() / 2;
+                        int centroBlocoX = bloco.x + bloco.width / 2;
+                        int centroBlocoY = bloco.y + bloco.height / 2;
+
+                        double dist = Point.distance(centroLabelX, centroLabelY, centroBlocoX, centroBlocoY);
+                        if (dist < menorDistancia) {
+                            menorDistancia = dist;
+                            melhorBloco = bloco;
+                        }
+                    }
+                }
+
+                if (melhorBloco != null) {
+                    label.setLocation(melhorBloco.x, melhorBloco.y);
+                    // Atualiza propriedades relativas
+                    label.putClientProperty("relX", (double) melhorBloco.x / panel.getWidth());
+                    label.putClientProperty("relY", (double) melhorBloco.y / panel.getHeight());
+                    panel.revalidate();
+                    panel.repaint();
+                }
+            }
+        });
+
+        label.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Point current = e.getLocationOnScreen();
+                SwingUtilities.convertPointFromScreen(current, panel);
+
+                int x = current.x - offset[0].x;
+                int y = current.y - offset[0].y;
+                int maxX = panel.getWidth() - label.getWidth() / 2;
+                int maxY = panel.getHeight() - label.getHeight() / 2;
+
+                x = Math.max(0, Math.min(x, maxX));
+                y = Math.max(0, Math.min(y, maxY));
+
+                Rectangle novoBounds = new Rectangle(x, y, label.getWidth(), label.getHeight());
+                for (JLabel outro : atalhos) {
+                    if (outro != label && outro.getBounds().intersects(novoBounds)) {
+                        return;
+                    }
+                }
+
+                label.setLocation(x, y);
+                // Não atualiza relX/Y aqui para só atualizar no "snap" (mouseReleased)
+            }
+        });
+    }
+
+    public static void reposicionarAtalhosRelativos(JPanel destino, List<JLabel> lista) {
+        int larguraPainel = destino.getWidth();
+        int alturaPainel = destino.getHeight();
+
+        List<Rectangle> blocos = calcularBlocos(larguraPainel);
+
+        // Marca blocos visíveis e blocos ocupados
+        Map<JLabel, Rectangle> mapaAtalhoParaBloco = new HashMap<>();
+
+        for (JLabel atalho : lista) {
+            Rectangle boundsAtalho = atalho.getBounds();
+
+            // Encontrar o bloco atual do atalho (intersecta)
+            Rectangle blocoAtual = null;
+            for (Rectangle bloco : blocos) {
+                if (bloco.intersects(boundsAtalho)) {
+                    blocoAtual = bloco;
+                    break;
+                }
+            }
+
+            if (blocoAtual != null) {
+                mapaAtalhoParaBloco.put(atalho, blocoAtual);
+            }
+        }
+
+        // Lista blocos indisponíveis (fora do painel)
+        Set<Rectangle> blocosIndisponiveis = new HashSet<>();
+        for (Rectangle bloco : blocos) {
+            if (!blocoVisivel(bloco, destino)) {
+                blocosIndisponiveis.add(bloco);
+            }
+        }
+
+        // Mover atalhos que estão em blocos indisponíveis para blocos disponíveis
+        for (JLabel atalho : lista) {
+            Rectangle blocoAtual = mapaAtalhoParaBloco.get(atalho);
+            if (blocoAtual == null) {
+                continue;
+            }
+
+            if (blocosIndisponiveis.contains(blocoAtual)) {
+                // Procurar próximo bloco disponível e livre para mover o atalho
+                Rectangle blocoLivre = null;
+
+                for (Rectangle bloco : blocos) {
+                    if (!blocosIndisponiveis.contains(bloco)) {
+                        boolean ocupado = false;
+                        for (JLabel outro : lista) {
+                            if (outro != atalho && bloco.intersects(outro.getBounds())) {
+                                ocupado = true;
+                                break;
+                            }
+                        }
+                        if (!ocupado) {
+                            blocoLivre = bloco;
+                            break;
+                        }
+                    }
+                }
+
+                if (blocoLivre != null) {
+                    atalho.putClientProperty("relX", (double) blocoLivre.x / larguraPainel);
+                    atalho.putClientProperty("relY", (double) blocoLivre.y / alturaPainel);
+                } else {
+                    // Nenhum bloco disponível, deixar o atalho onde está, limitado ao painel
+                    int x = Math.max(0, Math.min(atalho.getX(), larguraPainel - atalho.getWidth()));
+                    int y = Math.max(0, Math.min(atalho.getY(), alturaPainel - atalho.getHeight()));
+                    atalho.setLocation(x, y);
+                }
+            } else {
+                // Bloco disponível, reposiciona normal pelo relX/relY e limita dentro do painel
+                Double relX = (Double) atalho.getClientProperty("relX");
+                Double relY = (Double) atalho.getClientProperty("relY");
+
+                if (relX != null && relY != null) {
+                    int x = (int) (relX * larguraPainel);
+                    int y = (int) (relY * alturaPainel);
+
+                    int maxX = destino.getWidth() - destino.getWidth() / 2;
+                    int maxY = destino.getHeight() - destino.getHeight() / 2;
+
+                    x = Math.max(0, Math.min(x, maxX));
+                    y = Math.max(0, Math.min(y, maxY));
+
+                    atalho.setLocation(x, y);
+                }
+            }
+        }
+
+        destino.revalidate();
+        destino.repaint();
+    }
+
+    private static List<Rectangle> calcularBlocos(int larguraPainel) {
+        List<Rectangle> blocos = new ArrayList<>();
+
+        // Calcula largura total para espaçamento
+        int totalEspaco = ESPACAMENTO * (NUM_COLUNAS + 1);
+
+        // Calcula largura disponível para blocos
+        int larguraDisponivel = larguraPainel - totalEspaco;
+
+        // Largura de cada bloco para encaixar proporcionalmente
+        int larguraBlocoDinamica = larguraDisponivel / NUM_COLUNAS;
+
+        for (int i = 0; i < NUM_LINHAS; i++) {
+            for (int j = 0; j < NUM_COLUNAS; j++) {
+                int x = ESPACAMENTO + j * (larguraBlocoDinamica + ESPACAMENTO);
+                int y = ESPACAMENTO + i * (BLOCO_ALTURA + ESPACAMENTO);
+                blocos.add(new Rectangle(x, y, larguraBlocoDinamica, BLOCO_ALTURA));
+            }
+        }
+
+        return blocos;
+    }
+
+    private static boolean blocoVisivel(Rectangle bloco, JPanel painel) {
+        int larguraPainel = painel.getWidth();
+        int alturaPainel = painel.getHeight();
+
+        // Verifica se metade ou mais do bloco está fora da área do painel na horizontal ou vertical
+        int meioX = bloco.x + bloco.width / 2;
+        int meioY = bloco.y + bloco.height / 2;
+
+        boolean metadeForaHorizontal = (meioX < 0) || (meioX > larguraPainel);
+        boolean metadeForaVertical = (meioY < 0) || (meioY > alturaPainel);
+
+        // Considera indisponível se metade estiver fora horizontal ou vertical
+        return !(metadeForaHorizontal || metadeForaVertical);
+    }
 
     // Funções TEMPO
     public static void temporizador_acao(int delayMs, Runnable acao, AtomicBoolean temporizador_disp, String msg) {
@@ -179,35 +563,35 @@ public class Funcoes {
         long minutos = d.toMinutesPart();
         long segundos = d.toSecondsPart();
 
-        StringBuilder sb = new StringBuilder();
+        return String.format("%02d:%02d:%02d", horas, minutos, segundos);
+    }
 
-        if (horas > 0) {
-            sb.append(horas).append(horas == 1 ? " h" : " hrs");
-        }
-        if (horas > 0 && minutos > 0) {
-            sb.append(", ");
-        }
-        if (minutos > 0) {
-            sb.append(minutos).append(" mins");
-        }
-        if ((horas > 0 || minutos > 0) && segundos > 0) {
-            sb.append(" e ");
-        }
-        if (segundos > 0) {
-            sb.append(segundos).append(" secs");
-        }
+    public static void init_lines_erro(File file, Properties config) {
+        String produto = new File(file.getParent()).getName();
+        String arquivo = file.getName().replaceFirst("[.][^.]+$", "");
 
-        if (horas == 0 && minutos == 0 && segundos == 0) {
-            return "0 secs";
-        }
+        String chave_lines_erro = "LinhasComErro_" + produto + "_" + arquivo;
 
-        return sb.toString();
+        for (String chave : config.stringPropertyNames()) {
+            if (chave.equals(chave_lines_erro)) {
+                String valor = config.getProperty(chave);
+                if (valor != null && !valor.trim().isEmpty()) {
+                    String[] lines = valor.split(",");
+                    for (String line : lines) {
+                        try {
+                            Table.linhasComErroDeTempo.add(Integer.valueOf(line.trim()));
+                        } catch (NumberFormatException ex) {
+                            System.err.println("Erro ao converter linha de erro: " + line);
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Funcoes Arquivo
-    public static void processar_arquivo(File file, JTable tabela, Tema tema) {
-        System.out.println("Procee: " + file.getPath());
-
+    public static void processar_arquivo(File file, JTable tabela) {
         if (file == null || !file.exists()) {
             System.out.println("Arquivo não encontrado: " + file.getAbsolutePath());
             return;
@@ -247,20 +631,13 @@ public class Funcoes {
 
             Table.model_padrao(tabela);
 
-            // Aplica renderizações visuais personalizadas
-            if (tema.modelo_tema.equals("Default")) {
-                tema.aplicar_cor_jtable(tabela, new Color(180,180,180), Color.BLACK, Color.WHITE, new Color(200, 200, 200), Color.BLACK, new Color(150, 150, 150), Color.BLACK, Color.GRAY, Color.orange, Color.GRAY, Color.orange);
-            } else if (tema.modelo_tema.equals("Dark")) {
-
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Erro geral ao processar o arquivo");
         }
     }
 
-    public static void criarCSV(String caminhoArquivo, String[] colunas, List<String[]> linhas, String[] linha) {
+    public static void criarCSV(String caminhoArquivo, String[] colunas, List<String[]> linhas) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(caminhoArquivo))) {
             // Escreve as colunas (primeira linha)
             bw.write(String.join(",", colunas));
@@ -272,12 +649,6 @@ public class Funcoes {
                     bw.write(String.join(",", line));
                     bw.newLine();
                 }
-            }
-            if (linha != null) {
-                bw.write(String.join(",", linha));
-                bw.newLine();
-
-                System.out.println("Arquivo CSV criado com sucesso: " + caminhoArquivo);
             }
         } catch (IOException e) {
             System.err.println("Erro ao criar arquivo CSV");
@@ -355,7 +726,6 @@ public class Funcoes {
             }
         } else {
             System.out.println("Arquivo de configuração não existe ainda.");
-            properties.setProperty("Last_file_open", "");
             properties.setProperty("Tema", "Default");
             try (FileOutputStream fos = new FileOutputStream(config)) {
                 properties.store(fos, "Arquivo de configuração gerado");
@@ -369,33 +739,13 @@ public class Funcoes {
 
     }
 
-    public static Properties salvarConfiguracao(String chave, String valor) {
-        Properties config = new Properties();
-        File arquivo = new File("config.properties");
-
-        // Se o arquivo já existir, carrega as configs antigas
-        if (arquivo.exists()) {
-            try (FileInputStream fis = new FileInputStream(arquivo)) {
-                config.load(fis);
-            } catch (IOException e) {
-                System.err.println("Erro ao carregar configurações existentes:");
-                e.printStackTrace();
-            }
-        }
-
-        // Agora adiciona/atualiza a nova chave
-        config.setProperty(chave, valor);
-
-        // Salva de volta
-        try (FileOutputStream fos = new FileOutputStream(arquivo)) {
-            config.store(fos, "Configuração do sistema");
-            System.out.println("Configuração salva: " + chave + "=" + valor);
+    public static void salvarConfiguracao(Properties props, String chave, String valor) {
+        props.setProperty(chave, valor);
+        try (FileOutputStream out = new FileOutputStream("config.properties")) {
+            props.store(out, null);
         } catch (IOException e) {
-            System.err.println("Erro ao salvar configuração:");
             e.printStackTrace();
         }
-
-        return config;
     }
 
     // Caixa de Mensagem Interface
@@ -403,4 +753,15 @@ public class Funcoes {
         JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
     }
 
+    public static boolean message_confirm(Component parent, String mensagem, String titulo) {
+        int resposta = JOptionPane.showConfirmDialog(
+                parent,
+                mensagem,
+                titulo,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        return resposta == JOptionPane.YES_OPTION;
+    }
 }

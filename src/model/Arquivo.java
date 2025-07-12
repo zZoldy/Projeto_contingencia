@@ -15,7 +15,6 @@ public class Arquivo {
 
     private String path_file;
     private File file;
-    private Table table;
 
     public Arquivo(String path_file, File file) {
         this.path_file = path_file;
@@ -28,14 +27,6 @@ public class Arquivo {
 
     public void setFile(File file) {
         this.file = file;
-    }
-
-    public Table getTable() {
-        return table;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
     }
 
     public String getPath_file() {
@@ -52,8 +43,7 @@ public class Arquivo {
                 + "\nNome do arquivo: " + ((file != null) ? file.getName() : "null")
                 + "\nPath do arquivo: " + ((path_file != null) ? path_file : "null")
                 + "\nParent do arquivo: " + ((file != null && file.getParent() != null) ? file.getParent() : "null")
-                + "\nFile: " + ((file != null) ? file.toString() : "null")
-                + "\nTable: " + ((table != null) ? table : "null");
+                + "\nFile: " + ((file != null) ? file.toString() : "null");
     }
 
 }

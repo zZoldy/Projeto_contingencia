@@ -132,6 +132,7 @@ public class Lauda {
         // Painel superior contendo a tabela e o texto
         painelSuperior.add(scrollTabela, BorderLayout.CENTER);
         painelSuperior.add(text_select_lauda, BorderLayout.SOUTH);
+        
 
         // Painel inferior: editor de texto
         txt_lauda = new JTextPane();
@@ -161,6 +162,7 @@ public class Lauda {
 
         }
         JScrollPane scrollTexto = new JScrollPane(txt_lauda);
+        
 
         // SplitPane com os dois painéis
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, painelSuperior, scrollTexto);
@@ -168,14 +170,6 @@ public class Lauda {
         int select = table.getSelectedRow();
 
         if (select >= 0) {
-            Rectangle cellRect = table.getCellRect(select, 0, true);
-            int linhaAbaixoY = cellRect.y + cellRect.height;
-
-            JViewport viewport = scrollTabela.getViewport();
-
-            // Posição visível da viewport dentro da JTable
-            Rectangle visibleRect = viewport.getViewRect();
-
             // Força o split no meio do painel
             int alturaTotal = externo.getHeight();
             if (alturaTotal == 0) {

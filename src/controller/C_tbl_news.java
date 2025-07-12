@@ -11,7 +11,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +29,12 @@ import model.Lauda;
 import model.Table;
 import view.Tbl_news;
 import Listener.Tempo_listener;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -76,7 +81,6 @@ public class C_tbl_news {
 
             valor_tMat_1 = Funcoes.format_ms_to_hms(valor_tMat_1);
             acumulado = Funcoes.soma_tempo(acumulado, valor_tMat_1);
-
         }
 
         this.tempo_producao = acumulado;
@@ -99,28 +103,70 @@ public class C_tbl_news {
                 editor.requestFocus();
             }
         }
+
+        if (linha == tabela.getRowCount() - 1) {
+            add_linha_last(tabela);
+        }
+    }
+
+    public void configurarAjusteAutomatico(JTable tabela) {
+        if (tabela.getClientProperty("autoResizeConfigured") != null) {
+            return;
+        }
+
+        ajustar_largura_colunas(tabela);
+        tabela.putClientProperty("terminateEditOnFocusLost", true);
+
+        // Atualiza ao editar dados
+        tabela.getModel().addTableModelListener(e -> {
+            SwingUtilities.invokeLater(() -> ajustar_largura_colunas(tabela));
+        });
+
+        // Atualiza ao perder o foco
+        tabela.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                ajustar_largura_colunas(tabela);
+            }
+        });
+
+        // Atualiza ao redimensionar o painel pai
+        Container parent = tabela.getParent();
+        if (parent != null) {
+            parent.addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    SwingUtilities.invokeLater(() -> ajustar_largura_colunas(tabela));
+                }
+            });
+        }
+
+        tabela.putClientProperty("autoResizeConfigured", true); // Marca que foi configurado
     }
 
     public void ajustar_largura_colunas(JTable tabela) {
-        final int margem = 10; // Margem extra para evitar cortes
+        if (tabela == null || tabela.getColumnCount() == 0) {
+            return;
+        }
+
+        final int margem = 10;
 
         for (int coluna = 0; coluna < tabela.getColumnCount(); coluna++) {
             TableColumn tableColumn = tabela.getColumnModel().getColumn(coluna);
             int larguraMax = 0;
 
-            // Verifica o tamanho do cabeçalho
+            // Cabeçalho
             TableCellRenderer headerRenderer = tabela.getTableHeader().getDefaultRenderer();
             Component headerComp = headerRenderer.getTableCellRendererComponent(tabela, tableColumn.getHeaderValue(), false, false, 0, 0);
             larguraMax = headerComp.getPreferredSize().width;
 
-            // Verifica o tamanho do conteúdo
+            // Conteúdo
             for (int linha = 0; linha < tabela.getRowCount(); linha++) {
                 TableCellRenderer cellRenderer = tabela.getCellRenderer(linha, coluna);
                 Component cellComp = tabela.prepareRenderer(cellRenderer, linha, coluna);
                 larguraMax = Math.max(larguraMax, cellComp.getPreferredSize().width);
             }
 
-            // Define a largura final da coluna
             tableColumn.setPreferredWidth(larguraMax + margem);
         }
     }
@@ -133,6 +179,9 @@ public class C_tbl_news {
         modelo_tabela.addRow(new Object[]{
             num_pg, "", "", "", "", "", "", "", "00:00", "00:00", "00:00", "", "", "00:00:00", ""
         });
+        if (listener != null) {
+            listener.onAttTempo();
+        }
     }
 
     public void add_linha_selected(JTable table, JPanel externo) {
@@ -201,7 +250,7 @@ public class C_tbl_news {
 
         DefaultTableModel modelo = (DefaultTableModel) table.getModel();
 
-// Remove a linha apenas se ela ainda existir
+        // Remove a linha apenas se ela ainda existir
         if (linha_selecionada >= 0 && linha_selecionada < modelo.getRowCount()) {
             modelo.removeRow(linha_selecionada);
             att_linha_delected(modelo, linha_selecionada);
@@ -220,10 +269,6 @@ public class C_tbl_news {
             } else {
                 lauda.rename_laudas_excluir_line(linha_selecionada);
             }
-
-            modelo.removeRow(linha_selecionada);
-
-            att_linha_delected(modelo, linha_selecionada);
 
         } catch (Exception e) {
             System.err.println("Nenhum arquivo selecioa");
@@ -247,9 +292,8 @@ public class C_tbl_news {
         String line_erro_file = "LinhasComErro_" + view.info.get(0) + "_" + view.info.get(1);
         StringBuilder lines = builder_linhas_erro();
 
-        C_principal.config = Funcoes.salvarConfiguracao(line_erro_file, lines.toString());
+        Funcoes.salvarConfiguracao(C_principal.config, line_erro_file, lines.toString());
 
-        ajustar_largura_colunas(view.tbl_news);
         if (listener != null) {
             listener.onAttTempo();
             listener.attSaidaJornal();
@@ -337,7 +381,7 @@ public class C_tbl_news {
         return lauda_txt;
     }
 
-    void tempo_prelim(JTable table) {
+    void tempo_prelim_bo(JTable table) {
         int total_lines = table.getRowCount();
         int selected_line = table.getSelectedRow() + 1;
         for (int c = 1; c < (total_lines - 1); c++) {
@@ -384,6 +428,43 @@ public class C_tbl_news {
         }
     }
 
+    public void prelim_to_final(JTable table_origem, File file_origem) {
+        int row = table_origem.getSelectedRow();
+        if (row == -1) {
+            Funcoes.message_error("Selecione uma linha para enviar ao Final.");
+            return;
+        }
+
+        String path_final = file_origem.getParent();
+        File file_final = new File(path_final, "Final.csv");
+        System.out.println("FIle: " + file_final.getPath());
+
+        if (!file_final.exists()) {
+            Funcoes.message_error("Arquivo 'Final' não encontrado: " + file_final.getPath());
+            return;
+        }
+
+        // Cria tabela temporária e carrega conteúdo do arquivo Final
+        JTable tabela_final = new JTable(Table.modelos("Final"));
+        Funcoes.processar_arquivo(file_final, tabela_final);
+
+        // Garante que a linha de destino exista
+        while (tabela_final.getRowCount() <= row) {
+            ((DefaultTableModel) tabela_final.getModel()).addRow(new Object[table_origem.getColumnCount()]);
+        }
+
+        // Copia valores da linha selecionada
+        for (int col = 0; col < table_origem.getColumnCount(); col++) {
+            Object valor = table_origem.getValueAt(row, col);
+            tabela_final.setValueAt(valor, row, col);
+        }
+
+        // Salva a tabela atualizada
+        Funcoes.save_file(tabela_final, file_final);
+        System.out.println("Linha " + (row + 1) + " transferida para o arquivo Final.");
+        table_origem.setValueAt("*", row, 1);
+    }
+
     public void in_tMat(JTable table) {
         int line = table.getSelectedRow();
         int column = table.getSelectedColumn();
@@ -418,7 +499,7 @@ public class C_tbl_news {
 
         StringBuilder lines = builder_linhas_erro();
 
-        C_principal.config = Funcoes.salvarConfiguracao(line_erro_file, lines.toString());
+        Funcoes.salvarConfiguracao(C_principal.config, line_erro_file, lines.toString());
 
         table.setValueAt(tMat, line, 10);
         if (listener != null) {
@@ -474,9 +555,12 @@ public class C_tbl_news {
         tooltip.append("Tempo: ").append(tempo_int).append("<br>");
         tooltip.append("</html>");
 
+        Font font = new Font("Arial", Font.BOLD, 14);
+
         JLabel label = new JLabel(tooltip.toString());
         label.setOpaque(true);
         label.setBackground(new Color(255, 255, 210));
+        label.setFont(font);
         label.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         // Última linha da seleção

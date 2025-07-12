@@ -4,14 +4,12 @@
  */
 package model;
 
-import Framework.CustomTreeRenderer;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -22,7 +20,6 @@ import tables.Boletim_ctl2;
 import tables.Final;
 import tables.Formato;
 import tables.Prelim;
-import view.Tbl_news;
 
 /**
  *
@@ -92,28 +89,23 @@ public class Tree {
     }
 
     private NodeTree files_tree(File pasta) {
-
         Arquivo arq = new Arquivo(pasta.getPath(), pasta);
 
         // Ignorando os arquivos na JTree
-        if (pasta.getName().equals("Lauda_Final") || pasta.getName().equals("Lauda_Prelim")) {
+        if (pasta.getName().equals("Lauda_Final") || pasta.getName().equals("Lauda_Prelim") || pasta.getName().equals("Backup Prelim")) {
             return null;
         }
         NodeTree raizNode = new NodeTree(arq.getFile().getName(), false, arq);
         File[] arquivos = pasta.listFiles();
         if (arquivos != null) {
             for (File file : arquivos) {
-                // Ignorando os arquivos na JTree
-                if (file.getName().equals("Lauda_Final") || file.getName().equals("Lauda_Prelim")) {
-                    continue;
-                }
                 if (file.isDirectory()) {
-                    System.out.println("Pasta: " + file.getName());
+                    // System.out.println("Pasta: " + file.getName());
                     NodeTree subNode = files_tree(file);
                     raizNode.adicionar_filho(subNode);
 
                 } else {
-                    System.out.println("Arquivo: " + file.getName());
+                    // System.out.println("Arquivo: " + file.getName());
                     Arquivo arq_file = new Arquivo(file.getPath(), file);
 
                     String nomeSemExtensao = file.getName().replaceFirst("[.][^.]+$", "");
@@ -161,19 +153,19 @@ public class Tree {
                         if (criado) {
                             System.out.println("Arquivo criado: " + csv.getPath());
                             if (nomeArquivo.equals("Formato.csv")) {
-                                Formato format = new Formato(csv.getPath(), pasta.getName());
+                                Formato format = new Formato(csv.getPath(), pasta.getName(), nomeArquivo.replaceFirst("[.][^.]+$", ""));
 
                             } else if (nomeArquivo.equals("Prelim.csv")) {
-                                Final model_final = new Final(csv.getPath(), pasta.getName());
+                                Prelim prelim_final = new Prelim(csv.getPath(), pasta.getName(), nomeArquivo.replaceFirst("[.][^.]+$", ""));
 
                             } else if (nomeArquivo.equals("Final.csv")) {
-                                Prelim prelim = new Prelim(csv.getPath(), pasta.getName());
+                                Final final_modelo = new Final(csv.getPath(), pasta.getName(), nomeArquivo.replaceFirst("[.][^.]+$", ""));
 
                             } else if (nomeArquivo.equals("BOLETIM_CTL1.csv")) {
-                                Boletim_ctl1 b_c1 = new Boletim_ctl1(csv.getPath(), pasta.getName());
+                                Boletim_ctl1 b_c1 = new Boletim_ctl1(csv.getPath(), pasta.getName(), nomeArquivo.replaceFirst("[.][^.]+$", ""));
 
                             } else if (nomeArquivo.equals("BOLETIM_CTL2.csv")) {
-                                Boletim_ctl2 b_c2 = new Boletim_ctl2(csv.getPath(), pasta.getName());
+                                Boletim_ctl2 b_c2 = new Boletim_ctl2(csv.getPath(), pasta.getName(), nomeArquivo.replaceFirst("[.][^.]+$", ""));
 
                             }
                         }
@@ -193,17 +185,13 @@ public class Tree {
         DefaultMutableTreeNode rootNode = nodeTree.toTreeNode();
 
         tree.setModel(new DefaultTreeModel(rootNode));
-        tree.setUI(new javax.swing.plaf.basic.BasicTreeUI() {
-            protected boolean isLocationInExpandControl(int row, int rowLevel, int x, int y) {
-                return false; // Permite que qualquer clique na linha seja tratado como clique no nó
-            }
-        });
-
+        tree.setBorder(null);
         return tree.getModel();
     }
 
     public void attNode(NodeTree node) {
         node = nodeTreeModel();
+        System.out.println("Node: " + node);
     }
 
     public NodeTree getProcess_tree() {

@@ -6,12 +6,10 @@ package view;
 
 import Framework.Desktop_image;
 import controller.C_principal;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.text.ParseException;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
 
@@ -23,6 +21,9 @@ public class Principal extends javax.swing.JFrame {
 
     C_principal controller;
 
+    boolean stts_pn_lateral = true;
+    boolean stts_pn_superior = false;
+
     /**
      * Creates new form Principal
      */
@@ -33,7 +34,13 @@ public class Principal extends javax.swing.JFrame {
         controller = new C_principal(this);
 
         controller.init();
-        setMinimumSize(new Dimension(1000, 500));
+        javax.swing.Timer timer = new javax.swing.Timer(1000, e -> {
+            String memoria = controller.memoria_app();
+            lbl_memoria.setText("Memória usada: " + memoria + " KB");
+        });
+        timer.start();
+
+        setMinimumSize(new Dimension(1000, 620));
 
     }
 
@@ -48,10 +55,10 @@ public class Principal extends javax.swing.JFrame {
 
         pn_fundo = new javax.swing.JPanel();
         pn_superior_1 = new javax.swing.JPanel();
-        pn_superior_2 = new javax.swing.JPanel();
         pn_lateral_esquerdo = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tree_produto = new javax.swing.JTree();
+        lbl_memoria = new javax.swing.JLabel();
         pn_desktop = new javax.swing.JPanel();
         Desktop = new Desktop_image("/icon/logo_globinho.png");
         pn_inferior_1 = new javax.swing.JPanel();
@@ -73,20 +80,20 @@ public class Principal extends javax.swing.JFrame {
             lbl_encerramento_tempo = new javax.swing.JFormattedTextField(mf);
             lbl_stts_jornal = new javax.swing.JLabel();
             lbl_stts_jornal_tempo = new javax.swing.JLabel();
+            lbl_hora_atual = new javax.swing.JLabel();
             mn_superior = new javax.swing.JMenuBar();
             jMenu1 = new javax.swing.JMenu();
             jMenu3 = new javax.swing.JMenu();
-            jMenu2 = new javax.swing.JMenu();
-            jMenuItem4 = new javax.swing.JMenuItem();
-            jMenu4 = new javax.swing.JMenu();
-            jMenuItem5 = new javax.swing.JMenuItem();
-            jMenuItem6 = new javax.swing.JMenuItem();
+            mn_item_modo_tema = new javax.swing.JMenuItem();
             jMenu5 = new javax.swing.JMenu();
             jMenuItem1 = new javax.swing.JMenuItem();
+            jMenuItem5 = new javax.swing.JMenuItem();
+            jMenuItem4 = new javax.swing.JMenuItem();
             jMenuItem2 = new javax.swing.JMenuItem();
             jMenuItem3 = new javax.swing.JMenuItem();
 
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+            setTitle("Mirror-Page");
             addComponentListener(new java.awt.event.ComponentAdapter() {
                 public void componentResized(java.awt.event.ComponentEvent evt) {
                     formComponentResized(evt);
@@ -102,6 +109,7 @@ public class Principal extends javax.swing.JFrame {
             pn_fundo.setPreferredSize(new java.awt.Dimension(1280, 720));
 
             pn_superior_1.setBackground(new java.awt.Color(30, 30, 30));
+            pn_superior_1.setVisible(false);
 
             javax.swing.GroupLayout pn_superior_1Layout = new javax.swing.GroupLayout(pn_superior_1);
             pn_superior_1.setLayout(pn_superior_1Layout);
@@ -111,26 +119,11 @@ public class Principal extends javax.swing.JFrame {
             );
             pn_superior_1Layout.setVerticalGroup(
                 pn_superior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 28, Short.MAX_VALUE)
-            );
-
-            pn_superior_2.setBackground(new java.awt.Color(30, 30, 30));
-            pn_superior_2.setPreferredSize(new java.awt.Dimension(100, 30));
-
-            javax.swing.GroupLayout pn_superior_2Layout = new javax.swing.GroupLayout(pn_superior_2);
-            pn_superior_2.setLayout(pn_superior_2Layout);
-            pn_superior_2Layout.setHorizontalGroup(
-                pn_superior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 1280, Short.MAX_VALUE)
-            );
-            pn_superior_2Layout.setVerticalGroup(
-                pn_superior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 24, Short.MAX_VALUE)
+                .addGap(0, 80, Short.MAX_VALUE)
             );
 
             pn_lateral_esquerdo.setBackground(new java.awt.Color(30, 30, 30));
 
-            tree_produto.setBackground(new java.awt.Color(30, 30, 30));
             tree_produto.setBorder(null);
             javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Árvore");
             tree_produto.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
@@ -147,16 +140,30 @@ public class Principal extends javax.swing.JFrame {
                 }
             });
             jScrollPane1.setViewportView(tree_produto);
+            jScrollPane1.setBorder(BorderFactory.createEmptyBorder());
+
+            lbl_memoria.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+            lbl_memoria.setForeground(new java.awt.Color(255, 51, 51));
+            lbl_memoria.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            lbl_memoria.setText("Memória");
 
             javax.swing.GroupLayout pn_lateral_esquerdoLayout = new javax.swing.GroupLayout(pn_lateral_esquerdo);
             pn_lateral_esquerdo.setLayout(pn_lateral_esquerdoLayout);
             pn_lateral_esquerdoLayout.setHorizontalGroup(
                 pn_lateral_esquerdoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_lateral_esquerdoLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(lbl_memoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
             );
             pn_lateral_esquerdoLayout.setVerticalGroup(
                 pn_lateral_esquerdoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
+                .addGroup(pn_lateral_esquerdoLayout.createSequentialGroup()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lbl_memoria, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addContainerGap())
             );
 
             Desktop.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -172,11 +179,11 @@ public class Principal extends javax.swing.JFrame {
             Desktop.setLayout(DesktopLayout);
             DesktopLayout.setHorizontalGroup(
                 DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 1080, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
             );
             DesktopLayout.setVerticalGroup(
                 DesktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGap(0, 579, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
             );
 
             javax.swing.GroupLayout pn_desktopLayout = new javax.swing.GroupLayout(pn_desktop);
@@ -187,7 +194,7 @@ public class Principal extends javax.swing.JFrame {
             );
             pn_desktopLayout.setVerticalGroup(
                 pn_desktopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(Desktop)
+                .addComponent(Desktop, javax.swing.GroupLayout.Alignment.TRAILING)
             );
 
             pn_inferior_1.setBackground(new java.awt.Color(30, 30, 30));
@@ -195,7 +202,6 @@ public class Principal extends javax.swing.JFrame {
             lbl_frame_open.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
             lbl_frame_open.setForeground(new java.awt.Color(255, 255, 255));
             lbl_frame_open.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            lbl_frame_open.setText("Nenhum arquivo em uso");
 
             lbl_tempo_producao_tempo.setForeground(new java.awt.Color(255, 255, 255));
             lbl_tempo_producao_tempo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -212,6 +218,7 @@ public class Principal extends javax.swing.JFrame {
             lbl_out_jorn.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
             lbl_out_jorn.setText("Saída do Jornal:");
 
+            lbl_out_jornal_tempo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
             lbl_out_jornal_tempo.setForeground(new java.awt.Color(255, 255, 255));
             lbl_out_jornal_tempo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
             lbl_out_jornal_tempo.setText("00:00:00");
@@ -226,33 +233,33 @@ public class Principal extends javax.swing.JFrame {
                 pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pn_inferior_1Layout.createSequentialGroup()
                     .addComponent(lbl_frame_open, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(70, 70, 70)
-                    .addComponent(lbl_in_jorn, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGap(43, 43, 43)
+                    .addComponent(lbl_in_jorn, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(lbl_in_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(100, 100, 100)
-                    .addComponent(lbl_tempo_producao, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_tempo_producao, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(lbl_tempo_producao_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(18, 18, 18)
-                    .addComponent(lbl_out_jorn, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_tempo_producao_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(51, 51, 51)
+                    .addComponent(lbl_out_jorn, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(lbl_out_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(170, Short.MAX_VALUE))
+                    .addComponent(lbl_out_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
             );
             pn_inferior_1Layout.setVerticalGroup(
                 pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_in_jorn, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_in_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(pn_inferior_1Layout.createSequentialGroup()
                     .addGroup(pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(pn_inferior_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lbl_tempo_producao_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_out_jorn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_out_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lbl_out_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_tempo_producao, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(lbl_frame_open, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(0, 0, Short.MAX_VALUE))
-                .addComponent(lbl_in_jorn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_in_jornal_tempo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_tempo_producao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
 
             pn_inferior_2.setBackground(new java.awt.Color(30, 30, 30));
@@ -298,32 +305,41 @@ public class Principal extends javax.swing.JFrame {
         lbl_stts_jornal_tempo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbl_stts_jornal_tempo.setText("Status");
 
+        lbl_hora_atual.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbl_hora_atual.setText("Hora Atual:");
+
         javax.swing.GroupLayout pn_inferior_2Layout = new javax.swing.GroupLayout(pn_inferior_2);
         pn_inferior_2.setLayout(pn_inferior_2Layout);
         pn_inferior_2Layout.setHorizontalGroup(
             pn_inferior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_inferior_2Layout.createSequentialGroup()
                 .addComponent(lbl_close, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70)
-                .addComponent(lbl_encerramento, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(43, 43, 43)
+                .addComponent(lbl_encerramento, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbl_encerramento_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(103, 103, 103)
-                .addComponent(lbl_stts_jornal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addComponent(lbl_stts_jornal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lbl_stts_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_stts_jornal_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(lbl_hora_atual, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_horario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pn_inferior_2Layout.setVerticalGroup(
             pn_inferior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pn_inferior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(lbl_close, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbl_horario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lbl_encerramento, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lbl_encerramento_tempo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(lbl_stts_jornal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lbl_stts_jornal_tempo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lbl_close, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(pn_inferior_2Layout.createSequentialGroup()
+                .addGroup(pn_inferior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pn_inferior_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbl_encerramento, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_encerramento_tempo))
+                    .addComponent(lbl_hora_atual, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_stts_jornal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_stts_jornal_tempo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_horario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pn_fundoLayout = new javax.swing.GroupLayout(pn_fundo);
@@ -335,7 +351,6 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(pn_lateral_esquerdo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(pn_desktop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(pn_superior_2, javax.swing.GroupLayout.DEFAULT_SIZE, 1280, Short.MAX_VALUE)
             .addComponent(pn_inferior_2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pn_inferior_1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -344,15 +359,12 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(pn_fundoLayout.createSequentialGroup()
                 .addComponent(pn_superior_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(pn_superior_2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
                 .addGroup(pn_fundoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pn_lateral_esquerdo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pn_desktop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pn_desktop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pn_lateral_esquerdo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addComponent(pn_inferior_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(pn_inferior_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(pn_inferior_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jMenu1.setForeground(new java.awt.Color(255, 255, 255));
@@ -365,27 +377,13 @@ public class Principal extends javax.swing.JFrame {
 
         jMenu3.setText("Tema");
 
-        jMenu2.setText("Aplicação");
-
-        jMenuItem4.setText("Modo");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        mn_item_modo_tema.setText("Modo");
+        mn_item_modo_tema.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                mn_item_modo_temaActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem4);
-
-        jMenu3.add(jMenu2);
-
-        jMenu4.setText("Tabela");
-
-        jMenuItem5.setText("Modo");
-        jMenu4.add(jMenuItem5);
-
-        jMenu3.add(jMenu4);
-
-        jMenuItem6.setText("Definir Tema");
-        jMenu3.add(jMenuItem6);
+        jMenu3.add(mn_item_modo_tema);
 
         jMenu1.add(jMenu3);
 
@@ -401,7 +399,28 @@ public class Principal extends javax.swing.JFrame {
 
         jMenu1.add(jMenu5);
 
-        jMenuItem2.setText("Imprimir Tabela");
+        jMenuItem5.setText("Abrir Atalhos");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem5);
+
+        jMenuItem4.setText("Fechar Produtos");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem4);
+
+        jMenuItem2.setText("Resetar JTree");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
 
         jMenuItem3.setText("Infos_Variaveis");
@@ -431,33 +450,15 @@ public class Principal extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tree_produtoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tree_produtoMouseClicked
-        // TODO add your handling code here:
-        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
-            controller.process_init_table(evt);
-        }
-    }//GEN-LAST:event_tree_produtoMouseClicked
-
-    private void tree_produtoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tree_produtoMouseReleased
-        // TODO add your handling code here:
-        if (evt.isPopupTrigger()) {
-            controller.show_popup_jtree(evt);
-        }
-    }//GEN-LAST:event_tree_produtoMouseReleased
-
     private void DesktopComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_DesktopComponentResized
         // TODO add your handling code here:
         controller.tbl_responsiva();
 
     }//GEN-LAST:event_DesktopComponentResized
 
-    private void tree_produtoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tree_produtoMousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tree_produtoMousePressed
-
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        controller.close_frame();
+        controller.close_frame(controller.back_file);
     }//GEN-LAST:event_formWindowClosing
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -482,7 +483,7 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             controller.info_produto_arquivo("", "");
-            
+
         }
     }//GEN-LAST:event_lbl_encerramento_tempoKeyPressed
 
@@ -497,12 +498,63 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        controller.format_produto();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void mn_item_modo_temaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mn_item_modo_temaActionPerformed
+        // TODO add your handling code here:
+        controller.choose_tema();
+    }//GEN-LAST:event_mn_item_modo_temaActionPerformed
+
+    private void tree_produtoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tree_produtoMouseReleased
+        // TODO add your handling code here:
+        if (evt.isPopupTrigger()) {
+            controller.show_popup_jtree(evt);
+        }
+    }//GEN-LAST:event_tree_produtoMouseReleased
+
+    private void tree_produtoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tree_produtoMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tree_produtoMousePressed
+
+    private void tree_produtoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tree_produtoMouseClicked
+        // TODO add your handling code here:
+        controller.process_init_table_jtree();
+    }//GEN-LAST:event_tree_produtoMouseClicked
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
-
+        if (stts_pn_lateral) {
+            pn_lateral_esquerdo.setVisible(false);
+            jMenuItem4.setText("Abrir Produtos");
+            stts_pn_lateral = false;
+        } else {
+            pn_lateral_esquerdo.setVisible(true);
+            jMenuItem4.setText("Fechar Produtos");
+            stts_pn_lateral = true;
+        }
+        Desktop.setSize(pn_fundo.getWidth(), Desktop.getHeight());
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        if (stts_pn_superior) {
+            pn_superior_1.setVisible(false);
+            jMenuItem5.setText("Abrir Atalhos");
+            stts_pn_superior = false;
+        } else {
+            pn_superior_1.setVisible(true);
+            jMenuItem5.setText("Fechar Atalhos");
+            stts_pn_superior = true;
+        }
+        Desktop.setSize(Desktop.getWidth(), pn_fundo.getHeight()
+        );
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        controller.setTree();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -543,38 +595,37 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JDesktopPane Desktop;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JLabel lbl_close;
     public javax.swing.JLabel lbl_encerramento;
     public javax.swing.JFormattedTextField lbl_encerramento_tempo;
     public javax.swing.JLabel lbl_frame_open;
+    public javax.swing.JLabel lbl_hora_atual;
     public javax.swing.JLabel lbl_horario;
     public javax.swing.JLabel lbl_in_jorn;
     public javax.swing.JLabel lbl_in_jornal_tempo;
+    private javax.swing.JLabel lbl_memoria;
     public javax.swing.JLabel lbl_out_jorn;
     public javax.swing.JLabel lbl_out_jornal_tempo;
     public javax.swing.JLabel lbl_stts_jornal;
     public javax.swing.JLabel lbl_stts_jornal_tempo;
     public javax.swing.JLabel lbl_tempo_producao;
     public javax.swing.JLabel lbl_tempo_producao_tempo;
+    public javax.swing.JMenuItem mn_item_modo_tema;
     public javax.swing.JMenuBar mn_superior;
     private javax.swing.JPanel pn_desktop;
-    private javax.swing.JPanel pn_fundo;
+    public javax.swing.JPanel pn_fundo;
     public javax.swing.JPanel pn_inferior_1;
     public javax.swing.JPanel pn_inferior_2;
     public javax.swing.JPanel pn_lateral_esquerdo;
     public javax.swing.JPanel pn_superior_1;
-    public javax.swing.JPanel pn_superior_2;
     public javax.swing.JTree tree_produto;
     // End of variables declaration//GEN-END:variables
 }

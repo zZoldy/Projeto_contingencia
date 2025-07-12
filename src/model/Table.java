@@ -1,18 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+/**
+ * Classe utilitária para configuração e renderização customizada de tabelas (JTable).
+ *
+ * Inclui suporte a:
+ * - Aplicação de modelos de dados com regras específicas de edição
+ * - Renderização visual customizada para cabeçalho e linhas
+ * - Detecção de erros em colunas de tempo (coluna 10)
+ * - Aplicação de editores de célula com formatação de tempo
+ *
+ * Usada principalmente no contexto de planejamento de espelhos editoriais e
+ * gestão visual de tabelas em interfaces Swing.
+ *
+ * @author Z D K
  */
 package model;
 
+import Framework.Funcoes;
 import Framework.TimeCellEditor;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.HashSet;
 import java.util.Set;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -43,7 +56,6 @@ public class Table {
     /**
      * Aplica o modelo e configurações visuais na tabela recebida.
      *
-     * @param modelo Modelo de dados para a tabela
      * @param table JTable a ser configurada
      */
     public static void model_padrao(JTable table) {
@@ -78,7 +90,7 @@ public class Table {
                     return false; // Nenhuma célula editável
                 }
             };
-        } else if (arquivo.equals("Prelim") || arquivo.equals("Final")) {
+        } else if (arquivo.equals("Prelim") || arquivo.equals("Final") || arquivo.equals("BOLETIM_CTL1") || arquivo.equals("BOLETIM_CTL2")) {
             modelo = new DefaultTableModel() {
                 @Override
                 public boolean isCellEditable(int row, int column) {
@@ -87,16 +99,17 @@ public class Table {
                         return column == 5 || column == 13;
                     }
                     // Outras linhas, tudo exceto colunas 10 e 13
-                    return column != 10 && column != 13;
+                    return column != 1 && column != 10 && column != 13;
                 }
             };
         } else {
             modelo = new DefaultTableModel() {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    return column != 10 && column != 13;
+                    return false;
                 }
             };
+            Funcoes.message_error("Arquivo/Tabela Não Identificado");
         }
 
         return modelo;
@@ -106,8 +119,10 @@ public class Table {
      * Aplica renderização personalizada ao cabeçalho da tabela.
      *
      * @param tabela JTable que terá o cabeçalho renderizado
+     * @param background
+     * @param foreground
      */
-    public static void renderer_header_table(JTable tabela, Color background, Color foreground) {
+    public static void renderer_header_table(JTable tabela, Color background, Color foreground, Color border) {
         JTableHeader header = tabela.getTableHeader();
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -122,6 +137,8 @@ public class Table {
                 label.setHorizontalAlignment(SwingConstants.CENTER);
                 label.setFont(label.getFont().deriveFont(Font.BOLD));
                 label.setOpaque(true); // Necessário para aplicar a cor
+
+                setBorder(BorderFactory.createMatteBorder(0, 0, 0, 2, border));
                 return label;
             }
         });
@@ -132,6 +149,14 @@ public class Table {
      * alternância de cores por linha e detecção de erro de tempo.
      *
      * @param tabela JTable que terá as células renderizadas
+     * @param background
+     * @param foreground
+     * @param background_2
+     * @param foreground_2
+     * @param background_selected_1
+     * @param foreground_selected_1
+     * @param background_selected_2
+     * @param foreground_selected_2
      */
     public static void renderer_line_table(JTable tabela, Color background, Color foreground, Color background_2, Color foreground_2, Color background_selected_1, Color foreground_selected_1, Color background_selected_2, Color foreground_selected_2) {
         tabela.setOpaque(false);
@@ -194,15 +219,13 @@ public class Table {
      * @param valor Valor da célula
      */
     static void error_calc_tMat(boolean isSelected, Component cell, int column, int row, Object valor) {
-        if (isSelected) {
-            // Só mexe nas cores se a célula NÃO estiver selecionada
-            if (column == 10) {
-                String cellText = (valor != null) ? valor.toString().trim() : "";
-                if (cellText.equals("00:00") && linhasComErroDeTempo.contains(row)) {
-                    cell.setBackground(Color.RED);// Marca com vermelho
-                }
+        // Só mexe nas cores se a célula NÃO estiver selecionada
+        if (column == 10) {
+            String cellText = (valor != null) ? valor.toString().trim() : "";
+            if (cellText.equals("00:00") && linhasComErroDeTempo.contains(row)) {
+                cell.setBackground(Color.RED);// Marca com vermelho
             }
-
         }
+
     }
 }
