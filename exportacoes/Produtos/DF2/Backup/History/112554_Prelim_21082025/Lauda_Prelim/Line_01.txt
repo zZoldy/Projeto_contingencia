@@ -1,0 +1,1 @@
+A cada atualização nos frames, um backup novo?

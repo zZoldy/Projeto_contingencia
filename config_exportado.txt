@@ -1,0 +1,52 @@
+# ================================
+# Configurações Gerais
+# ================================
+
+Tema=Star Light
+Coluna_style=LAST_COLUMN
+last_file_open=C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Formato.csv
+
+# ================================
+# Linhas com erro
+# ================================
+
+LinhasComErro_DF2_Prelim=
+LinhasComErro_BDBR_Prelim=
+LinhasComErro_BDBR_Final=
+
+# ================================
+# Tempos de Encerramento por Pasta/Arquivo
+# ================================
+
+# ---- BDBR ----
+Tempo_encerramento_BDBR_Final=08:30:00
+Tempo_encerramento_BDBR_Formato=00:00:00
+Tempo_encerramento_BDBR_Prelim=08:25:00
+
+# ---- BDDF ----
+Tempo_encerramento_BDDF_Final=00:00:00
+Tempo_encerramento_BDDF_Formato=00:00:00
+Tempo_encerramento_BDDF_Prelim=00:00:00
+
+# ---- DF1 ----
+Tempo_encerramento_DF1_Final=00:00:00
+Tempo_encerramento_DF1_Formato=00:00:00
+Tempo_encerramento_DF1_Prelim=00:00:00
+
+# ---- DF2 ----
+Tempo_encerramento_DF2_Final=00:00:00
+Tempo_encerramento_DF2_Formato=00:00:00
+Tempo_encerramento_DF2_Prelim=00:00:00
+Tempo_encerramento_DF2_BOLETIM_CTL1=00:00:00
+Tempo_encerramento_DF2_BOLETIM_CTL2=00:00:00
+
+# ---- GCO ----
+Tempo_encerramento_GCO_Final=00:00:00
+Tempo_encerramento_GCO_Formato=00:00:00
+Tempo_encerramento_GCO_Prelim=00:00:00
+
+# ---- GE ----
+Tempo_encerramento_GE_Final=00:00:00
+Tempo_encerramento_GE_Formato=00:00:00
+Tempo_encerramento_GE_Prelim=00:00:00
+
