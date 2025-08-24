@@ -537,6 +537,9 @@ public class Funcoes {
         // Verificando se o usuário clicou em OK
         if (result == JOptionPane.OK_OPTION) {
             String selecionado = (String) comboBox.getSelectedItem();
+            if(selecionado.equals("Selecione sua Posição")){
+                return "";
+            }
             return selecionado;
         } else {
             JOptionPane.showMessageDialog(null, "Operação cancelada.");
