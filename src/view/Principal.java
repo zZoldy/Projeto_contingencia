@@ -107,8 +107,6 @@ public class Principal extends javax.swing.JFrame {
             jMenuItem2 = new javax.swing.JMenuItem();
             jMenuItem3 = new javax.swing.JMenuItem();
             jMenuItem1 = new javax.swing.JMenuItem();
-            jMenu3 = new javax.swing.JMenu();
-            jMenuItem4 = new javax.swing.JMenuItem();
 
             jMenu1.setText("File");
             jMenuBar1.add(jMenu1);
@@ -509,23 +507,6 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuBar2.add(jMenu4);
 
-        jMenu3.setText("jMenu3");
-        jMenu3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu3ActionPerformed(evt);
-            }
-        });
-
-        jMenuItem4.setText("jMenuItem4");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem4);
-
-        jMenuBar2.add(jMenu3);
-
         setJMenuBar(jMenuBar2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -720,17 +701,6 @@ public class Principal extends javax.swing.JFrame {
         controller.in_operador();
     }//GEN-LAST:event_formWindowOpened
 
-    private void jMenu3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu3ActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_jMenu3ActionPerformed
-
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-        System.out.println("D Size: " + d.getSize());
-        System.out.println("P size: " + getSize());
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -764,7 +734,6 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JDesktopPane Desktop;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
@@ -777,7 +746,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JLabel lbl_arquivo;
     private javax.swing.JLabel lbl_close_frame;
