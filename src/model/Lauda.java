@@ -300,19 +300,16 @@ public class Lauda {
         txt_lauda.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                System.out.println("insertUpdate");
                 atualizarLabelWpm(txt_lauda, wpm, WPM_BASE);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                System.out.println("removeUpdate");
                 atualizarLabelWpm(txt_lauda, wpm, WPM_BASE);
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                System.out.println("changedUpdate");
                 atualizarLabelWpm(txt_lauda, wpm, WPM_BASE);
             }
         });

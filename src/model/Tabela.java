@@ -107,7 +107,7 @@ public class Tabela {
                     return false;
                 }
             };
-            Funcoes.message_error("Arquivo/Tabela Não Identificado");
+            Funcoes.message_error(null, "Arquivo/Tabela Não Identificado");
         }
 
         return modelo;

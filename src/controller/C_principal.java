@@ -64,7 +64,7 @@ public class C_principal implements Tabela_to_principal {
     public jInternal_tabela tabela;
 
     public C_principal(Principal view) {
-
+        this.arvore = new Arvore_local();
         this.config = new Config();
         this.view = view;
 
@@ -73,7 +73,6 @@ public class C_principal implements Tabela_to_principal {
     public void init_controller() {
         Funcoes.relogio(view.lbl_horario);
 
-        arvore = new Arvore_local();
         arvore.treeModel(view.tree_produto);
 
         // Disparo de Backup
@@ -113,7 +112,7 @@ public class C_principal implements Tabela_to_principal {
 
     public void in_operador() {
         while (true) {
-            posicao = Funcoes.message_in(null, "Posição:", "Identificação do Operador");
+            posicao = Funcoes.message_in(view, "Posição:", "Identificação do Operador");
 
             if (posicao == null) {
                 System.exit(0);
@@ -130,10 +129,22 @@ public class C_principal implements Tabela_to_principal {
         if (conn.isPresent()) {
             ConexaoAtiva c = conn.get();
             c.log_interface(posicao);
-            last_file_open();
         } else {
             Log.registrarErro_noEx("Tentativa de Entrada do Usuário: " + posicao + " - Sem conexão");
-            in_operador();
+            posicao = "N/I";
+        }
+
+        view.lbl_posicao.setText(posicao);
+        last_file_open();
+    }
+
+    public void show_pn_lateral() {
+        if (view.pn_lateral.isVisible()) {
+            view.pn_lateral.setVisible(false);
+            view.lbl_close_pn_lateral.setText(">");
+        } else {
+            view.pn_lateral.setVisible(true);
+            view.lbl_close_pn_lateral.setText("<");
         }
     }
 

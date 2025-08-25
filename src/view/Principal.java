@@ -4,19 +4,16 @@
  */
 package view;
 
-import conexao.ConexaoAtiva;
-import conexao.NetUtils;
 import framework.Funcoes;
 import framework.Image_panel;
 import framework.Log;
 import controller.C_principal;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.io.File;
 import java.text.ParseException;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -29,6 +26,8 @@ import model.Tema;
  * @author Z D K
  */
 public class Principal extends javax.swing.JFrame {
+
+    ImageIcon icon = new ImageIcon(getClass().getResource("/icon/logo_128.png"));
 
     public C_principal controller;
     public AtomicBoolean action_frame = new AtomicBoolean(true);
@@ -50,7 +49,7 @@ public class Principal extends javax.swing.JFrame {
         Desktop.setVisible(false);
         pn_inferior_1.setVisible(false);
         pn_inferior_2.setVisible(false);
-
+        controller.show_pn_lateral();
     }
 
     /**
@@ -72,6 +71,8 @@ public class Principal extends javax.swing.JFrame {
         pn_lateral = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tree_produto = new javax.swing.JTree();
+        lbl_posicao = new javax.swing.JLabel();
+        lbl_cop = new javax.swing.JLabel();
         pn_desktop = new Image_panel("/icon/logo_globinho.png");
         pn_superior_desktop = new javax.swing.JPanel();
         lbl_close_frame = new javax.swing.JLabel();
@@ -122,8 +123,8 @@ public class Principal extends javax.swing.JFrame {
 
             setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
             setTitle("Mirror Page");
+            setIconImage(icon.getImage());
             setMinimumSize(new java.awt.Dimension(800, 600));
-            setPreferredSize(new java.awt.Dimension(1280, 720));
             addWindowListener(new java.awt.event.WindowAdapter() {
                 public void windowActivated(java.awt.event.WindowEvent evt) {
                     formWindowActivated(evt);
@@ -171,21 +172,39 @@ public class Principal extends javax.swing.JFrame {
                 }
             });
 
+            lbl_posicao.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+            lbl_posicao.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            lbl_posicao.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+            lbl_cop.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
+            lbl_cop.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            lbl_cop.setText("© Filipe A. Santos e Kathleen Dias");
+            lbl_cop.setToolTipText("Todos os direitos reservados");
+            lbl_cop.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+            lbl_cop.setName("lbl_cop"); // NOI18N
+
             javax.swing.GroupLayout pn_lateralLayout = new javax.swing.GroupLayout(pn_lateral);
             pn_lateral.setLayout(pn_lateralLayout);
             pn_lateralLayout.setHorizontalGroup(
                 pn_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_lateralLayout.createSequentialGroup()
+                .addGroup(pn_lateralLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .addGroup(pn_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane1)
+                        .addComponent(lbl_posicao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_cop, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
                     .addContainerGap())
             );
             pn_lateralLayout.setVerticalGroup(
                 pn_lateralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_lateralLayout.createSequentialGroup()
+                .addGroup(pn_lateralLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 685, Short.MAX_VALUE)
-                    .addContainerGap())
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lbl_posicao, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(12, 12, 12)
+                    .addComponent(lbl_cop, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(12, 12, 12))
             );
 
             pn_desktop.setName("pn_desktop"); // NOI18N
@@ -575,13 +594,7 @@ public class Principal extends javax.swing.JFrame {
 
     private void lbl_close_pn_lateralMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbl_close_pn_lateralMouseClicked
         // TODO add your handling code here:
-        if (pn_lateral.isVisible()) {
-            pn_lateral.setVisible(false);
-            lbl_close_pn_lateral.setText(">");
-        } else {
-            pn_lateral.setVisible(true);
-            lbl_close_pn_lateral.setText("<");
-        }
+        controller.show_pn_lateral();
 
         if (controller.tabela != null) {
             controller.tabela.controller.close_pop_up();
@@ -694,11 +707,14 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        Lauda_history tela_history = new Lauda_history(this, true);
+        tela_history.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         controller.in_operador();
+        controller.show_pn_lateral();
     }//GEN-LAST:event_formWindowOpened
 
     public static void main(String args[]) {
@@ -750,11 +766,13 @@ public class Principal extends javax.swing.JFrame {
     public javax.swing.JLabel lbl_arquivo;
     private javax.swing.JLabel lbl_close_frame;
     public javax.swing.JLabel lbl_close_pn_lateral;
+    private javax.swing.JLabel lbl_cop;
     public javax.swing.JLabel lbl_horario;
     private javax.swing.JLabel lbl_in_jornal;
     public javax.swing.JLabel lbl_in_jornal_tempo;
     private javax.swing.JLabel lbl_out_jornal;
     public javax.swing.JFormattedTextField lbl_out_jornal_tempo;
+    public javax.swing.JLabel lbl_posicao;
     private javax.swing.JLabel lbl_saida_jornal;
     public javax.swing.JLabel lbl_saida_jornal_tempo;
     private javax.swing.JLabel lbl_stts_jornal;

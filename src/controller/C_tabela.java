@@ -357,7 +357,7 @@ public class C_tabela {
     public void prelim_to_final(JTable table_origem, File file_origem) {
         int row = table_origem.getSelectedRow();
         if (row == -1) {
-            Funcoes.message_error("Selecione uma linha para enviar ao Final.");
+            Funcoes.message_error(view, "Selecione uma linha para enviar ao Final.");
             return;
         }
 
@@ -366,7 +366,7 @@ public class C_tabela {
         System.out.println("FIle: " + file_final.getPath());
 
         if (!file_final.exists()) {
-            Funcoes.message_error("Arquivo 'Final' não encontrado: " + file_final.getPath());
+            Funcoes.message_error(view, "Arquivo 'Final' não encontrado: " + file_final.getPath());
             return;
         }
 

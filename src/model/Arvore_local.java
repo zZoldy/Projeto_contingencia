@@ -38,17 +38,17 @@ import view.jInternal_tabela;
  * Autor: Z D K
  */
 public class Arvore_local {
-
+    
     private NodeTree process_tree; // Raiz lógica da árvore
     private JTree tree;            // Componente gráfico da árvore
 
     private boolean treeListener_mouseCliked = false;
     private final AtomicBoolean travaAbrirFrame = new AtomicBoolean(true);
-
+    
     private static final Set<String> PASTAS_IGNORADAS = Set.of("Lauda_Final", "Lauda_Prelim", "Lauda_BO_CTL1", "Lauda_BO_CTL2", "Backup");
-
+    
     public Arvore_local() {
-
+        
     }
 
     /**
@@ -64,32 +64,32 @@ public class Arvore_local {
         try {
             String raiz = System.getProperty("user.dir");
             File raizProdutos = new File(raiz + File.separator + "exportacoes" + File.separator + "Produtos");
-
+            
             try {
                 ver_path_produtos(raizProdutos); // Cria as pastas de produtos
             } catch (Exception e) {
                 Log.registrarErro("Falha na verificação da Árvore Produtos", e);
             }
-
+            
             try {
                 ver_path_csvs(raizProdutos);     // Cria os arquivos CSV padrão
             } catch (Exception e) {
                 Log.registrarErro("Falha na verificação dos Arquivos CSV da Pasta Produto", e);
             }
-
+            
             try {
                 process_tree = files_tree(raizProdutos); // Monta estrutura de árvore
             } catch (Exception e) {
                 Log.registrarErro("Falha ao Monta a estrutura da Árvore", e);
             }
-
+            
             return process_tree;
         } catch (Exception e) {
             System.err.println("\tErro\n" + e);
         }
         return null;
     }
-
+    
     @Override
     public String toString() {
         return "\n\tTree"
@@ -110,21 +110,21 @@ public class Arvore_local {
         if (row < 0) {
             return null;
         }
-
+        
         tree.setSelectionRow(row);
         TreePath path = tree.getSelectionPath();
         if (path == null) {
             return null;
         }
-
+        
         Object selectedNode = path.getLastPathComponent();
         if (!(selectedNode instanceof DefaultMutableTreeNode)) {
             return null;
         }
-
+        
         DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) selectedNode;
         Object userObject = treeNode.getUserObject();
-
+        
         if (userObject instanceof NodeTree node) {
             return node;
         }
@@ -141,7 +141,7 @@ public class Arvore_local {
      */
     private NodeTree files_tree(File pasta) {
         NodeTree raizNode = new NodeTree(pasta.getName(), false, pasta);
-
+        
         File[] arquivos = pasta.listFiles();
         if (arquivos != null) {
             for (File file : arquivos) {
@@ -158,7 +158,7 @@ public class Arvore_local {
                 }
             }
         }
-
+        
         return raizNode;
     }
 
@@ -170,9 +170,9 @@ public class Arvore_local {
     private void ver_path_produtos(File file) {
         if (!file.exists() || !file.isDirectory()) {
             file.mkdirs();
-            JOptionPane.showMessageDialog(null, "Diretório de Produto criado com sucesso: " + file.getPath());
+            Log.registrarErro_noEx("Diretório de Produto criado com sucesso: " + file.getPath());
         }
-
+        
         List<String> pastas = Arrays.asList("BDBR", "BDDF", "DF1", "GE", "DF2", "GCO");
         for (String nome : pastas) {
             File produtos = new File(file, nome);
@@ -193,11 +193,11 @@ public class Arvore_local {
         List<String> arquivosCsv = Arrays.asList("Prelim.csv", "Final.csv", "Formato.csv");
         List<String> boletim_csv = Arrays.asList("BO_CTL1.csv", "BO_CTL2.csv");
         File[] subpastas = produtos.listFiles(File::isDirectory);
-
+        
         if (subpastas == null) {
             return;
         }
-
+        
         for (File pasta : subpastas) {
             // Criação dos arquivos principais (Formato, Prelim, Final)
             for (String nomeArquivo : arquivosCsv) {
@@ -259,18 +259,18 @@ public class Arvore_local {
     public TreeModel treeModel(JTree in_tree) {
         this.tree = in_tree;
         NodeTree nodeTree = nodeTreeModel();
-
+        
         DefaultMutableTreeNode rootNode = nodeTree.toTreeNode();
-
+        
         tree.setModel(new DefaultTreeModel(rootNode));
-
+        
         tree.setScrollsOnExpand(false); // evita pulos ao expandir
         tree.setLargeModel(true);       // melhor desempenho para grandes árvores
 
         tree.addTreeSelectionListener(e -> {
             tree.repaint(); // Força atualização da interface visual
         });
-
+        
         return tree.getModel();
     }
 
@@ -282,18 +282,18 @@ public class Arvore_local {
     public void attNode(NodeTree node) {
         this.process_tree = nodeTreeModel();
     }
-
+    
     public void click_jTree(JTree tree, Principal view) {
         if (treeListener_mouseCliked) {
             return; // já foi adicionado
         }
-
+        
         tree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2) {
                     NodeTree node_select = node_select(tree, evt);
-
+                    
                     if (node_select != null) {
                         if (node_select.isArquivo()) {
                             // --- TRAVA PARA EVITAR ABRIR VÁRIOS FRAMES ---
@@ -311,12 +311,12 @@ public class Arvore_local {
                                 });
                                 return;
                             }
-
+                            
                             abrirFrameComTrava(node_select, view);
                         }
-
+                        
                     }
-
+                    
                 }
             }
         });
@@ -328,7 +328,7 @@ public class Arvore_local {
         if (node_select != null && node_select.isArquivo()) {
             view.setCursor(Cursor.WAIT_CURSOR);
             view.setEnabled(false);
-
+            
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
@@ -337,7 +337,7 @@ public class Arvore_local {
                     Thread.sleep(1000); // Simule processamento pesado se necessário
                     return null;
                 }
-
+                
                 @Override
                 protected void done() {
                     try {
@@ -352,44 +352,44 @@ public class Arvore_local {
             travaAbrirFrame.set(true); // Libera se não for arquivo válido
         }
     }
-
+    
     public void open_file(File file, Principal view) {
         view.controller.tabela = new jInternal_tabela(file, view.controller.config);
         view.controller.tabela.controller.setListener(view.controller);
-
+        
         try {
             Funcoes.processar_arquivo(file, view.controller.tabela.inews);
             Funcoes.init_lines_erro(file, view.controller.config);
         } catch (Exception e) {
-            Funcoes.message_error("Erro ao processar arquivo");
+            Funcoes.message_error(view, "Erro ao processar arquivo");
             Log.registrarErro("Erro ao processar Arquivo", e);
         }
-
+        
         view.controller.backup_file = file;
-
+        
         view.controller.salvarUltimoArquivoAberto(file);
-
+        
         SwingUtilities.invokeLater(() -> {
             view.controller.add_internal(file);
-
+            
             Tabela.ajustarLarguraColuna(view.controller.tabela.inews);
-
+            
             String tempo_entrada = (String) view.controller.tabela.inews.getValueAt(0, 13);
             view.controller.tempo_entrada(tempo_entrada);
-
+            
             switch (file.getName()) {
                 case "Prelim.csv", "BO_CTL1.csv", "BO_CTL2.csv" ->
                     Tabela.tempo_prelim_bo(view.controller.tabela.inews);
                 case "Final.csv" ->
                     Tabela.tempo_final(view.controller.tabela.inews);
             }
-
+            
             view.controller.tempo_producao();
             view.controller.tempo_saida();
             String chave = "Tempo_encerramento_" + view.controller.tabela.controller.produto_info + "_" + view.controller.tabela.controller.arquivo_info;
             view.lbl_out_jornal_tempo.setText(view.controller.config.get(chave));
             view.controller.stts_jornal();
-
+            
         });
     }
 
@@ -397,13 +397,13 @@ public class Arvore_local {
     public NodeTree getProcess_tree() {
         return process_tree;
     }
-
+    
     public void setProcess_tree(NodeTree process_tree) {
         this.process_tree = process_tree;
     }
-
+    
     public JTree getTree() {
         return tree;
     }
-
+    
 }

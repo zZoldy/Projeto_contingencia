@@ -1,0 +1,123 @@
+[2025-08-24T17:09:35.137159300] Atenção em: Diretório de Produto criado com sucesso: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos
+[2025-08-24T17:43:01.255940400] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:43:09.921243700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:43:15.037219300] Atenção em: Lauda aberta
+[2025-08-24T17:43:27.575194] Atenção em: Lauda aberta
+[2025-08-24T17:43:30.987982] Atenção em: Lauda aberta
+[2025-08-24T17:44:00.124763800] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:44:35.674844500] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:44:43.274402] Atenção em: Lauda aberta
+[2025-08-24T17:45:24.431007400] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:52:00.708345] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:52:10.378801100] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:53:34.515259700] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:53:44.217899100] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:54:12.305397300] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:54:36.564839] Atenção em: Prelim
+[2025-08-24T17:54:38.762269400] Atenção em: 
+[2025-08-24T17:54:40.595550400] Atenção em: Final
+[2025-08-24T17:57:01.289322300] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:57:14.568952800] Atenção em: Usuário: DTV2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:57:27.046905800] Atenção em: Nenhum arquivo: Final - na pasta: BDBR
+[2025-08-24T17:57:31.531904300] Atenção em: Pasta não encontrada: BDFF - Arquivo:Prelim
+[2025-08-24T17:57:40.680633800] Atenção em: Pasta não encontrada: BDFF - Arquivo:Prelim
+[2025-08-24T17:57:42.039623600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:58:00.547455200] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T17:58:10.603677300] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Final.csv - Salvo com Sucesso
+[2025-08-24T17:58:22.450130300] Atenção em: Pasta não encontrada: GE - Arquivo:Final
+[2025-08-24T17:58:37.684209] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T17:58:40.560534900] Atenção em: Lauda aberta
+[2025-08-24T17:58:48.301683100] Atenção em: Lauda aberta
+[2025-08-24T18:02:24.383590200] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T18:04:49.759041500] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T18:05:07.247667] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T18:06:44.567933300] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T18:07:38.017547700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T18:10:35.146884600] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T18:10:44.837224300] Atenção em: Ação Stop Frame Acionada
+[2025-08-24T18:13:24.806886800] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T20:42:22.273622100] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T20:43:03.686318700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDBR\Prelim.csv - Salvo com Sucesso
+[2025-08-24T20:43:11.362355] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\DF1\Prelim.csv - Salvo com Sucesso
+[2025-08-24T20:48:24.952557900] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T21:18:04.701391200] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T21:52:24.242524800] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T21:52:37.740342] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:52:44.546792200] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:52:45.113784400] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:52:53.436340700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:53:00.350657100] Atenção em: Usuário: DTV2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T21:53:04.988811700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:53:18.067959900] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:56:13.020662200] Atenção em: Lauda aberta
+[2025-08-24T21:59:12.793751500] Atenção em: Coluna - AUTO RESIZE OFF
+[2025-08-24T21:59:12.806679300] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T21:59:12.819646100] Atenção em: Frame Reiniciado
+[2025-08-24T21:59:29.061192700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:03:45.014704] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:03:50.979410600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:05:08.230578100] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:05:14.648461400] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:05:45.852898600] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:05:49.818168800] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:10:08.300642900] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:10:12.200940200] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:10:14.223527400] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:10:34.217532300] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:11:34.320209] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:11:40.334623500] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:12:02.936595400] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:12:08.355230400] Atenção em: Ação Stop Frame Acionada
+[2025-08-24T22:12:10.923975600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:12:19.740954600] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:12:29.197847900] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:12:38.421874100] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:13:35.461996300] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:13:40.221712900] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:18:34.218741600] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:18:44.049558400] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:22:10.852575600] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:22:13.141436600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:22:58.718180200] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:28:32.299043300] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:28:35.782366900] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:31:07.797927] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:31:11.118034600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:32:24.649471] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:33:47.773773300] Atenção em: Usuário: CTJ1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:33:50.266102300] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:35:20.674115400] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:39:26.348719300] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:43:18.327294300] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:43:26.406708600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:44:48.099804100] Atenção em: Tentativa de Entrada do Usuário: CTJ2b - Sem conexão
+[2025-08-24T22:44:51.179910800] Atenção em: Tentativa de Entrada do Usuário: CTJ2b - Sem conexão
+[2025-08-24T22:44:52.635822800] Atenção em: Tentativa de Entrada do Usuário: CTJ2b - Sem conexão
+[2025-08-24T22:44:54.252310600] Atenção em: Tentativa de Entrada do Usuário: DTV1b - Sem conexão
+[2025-08-24T22:44:56.325759800] Atenção em: Tentativa de Entrada do Usuário: DTV2b - Sem conexão
+[2025-08-24T22:45:01.010098300] Atenção em: Tentativa de Entrada do Usuário: CTJ2b - Sem conexão
+[2025-08-24T22:45:09.695256400] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:45:17.505132600] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:45:57.814591900] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:46:06.680281700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:46:38.878521500] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:46:43.215938] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:47:38.626506200] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:48:09.716597800] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:48:34.093839700] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:50:17.670728200] Atenção em: Usuário: DTV1b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:50:20.596066] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:50:39.369206900] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:50:51.830842300] Atenção em: Ação Stop Frame Acionada
+[2025-08-24T22:50:54.278594800] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:51:32.409885600] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:51:43.148388900] Atenção em: Coluna - AUTO RESIZE LAST_COLUMN
+[2025-08-24T22:51:43.155372300] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:51:43.175319200] Atenção em: Frame Reiniciado
+[2025-08-24T22:53:10.522758700] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:58:26.830484] Atenção em: Usuário: CTJ2b - IP: /192.168.15.4 - IPv6: false - Interface: Qualcomm Atheros QCA9377 Wireless Network Adapter - Via FallBack: false - MAC: 98:83:89:CC:DE:9F
+[2025-08-24T22:58:31.240137] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:58:49.627518700] Atenção em: Tentativa de Entrada do Usuário: DTV1b - Sem conexão
+[2025-08-24T22:58:53.324843900] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso
+[2025-08-24T22:59:20.771767700] Atenção em: Tentativa de Entrada do Usuário: CTJ2b - Sem conexão
+[2025-08-24T22:59:24.405918800] Atenção em: Arquivo: C:\Users\Z D K\OneDrive\Documentos\NetBeansProjects\Mirror_Page_Local\exportacoes\Produtos\BDDF\Prelim.csv - Salvo com Sucesso

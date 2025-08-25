@@ -64,7 +64,7 @@ public class Log {
             writer.write(linha);
             writer.newLine();
         } catch (IOException e) {
-            Funcoes.message_error("Erro ao gravar log de memória: " + e.getMessage());
+            Funcoes.message_error(null, "Erro ao gravar log de memória: " + e.getMessage());
         }
     }
 }

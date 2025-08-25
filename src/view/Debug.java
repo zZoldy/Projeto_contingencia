@@ -24,7 +24,7 @@ public class Debug extends javax.swing.JFrame {
      * @param principal
      */
     public Debug(Principal principal) {
-        initComponents(); // garante que lbl_memoria e demais labels não sejam nulos
+        initComponents(); 
 
         console.setSize(jDesktopPane1.getSize());
         jDesktopPane1.add(console);

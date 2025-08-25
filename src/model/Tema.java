@@ -108,6 +108,24 @@ public class Tema {
                     field.setForeground(COLOR_DARK);
                     field.setFont(font_desktop);
                 }
+
+                Font fonteLblOp = new Font("Arial", Font.BOLD, 10);
+                if (container instanceof Container subContainer && "pn_lateral".equals(container.getName())) {
+                    System.out.println("Painel Lateral");
+                    Component[] filhos_pn_lateral = subContainer.getComponents();
+                    for (Component neto : filhos_pn_lateral) {
+                        //Entrando nos Labels/Components do Painel Superior
+                        if (neto instanceof JLabel label) {
+                            if ("lbl_cop".equals(label.getName())) {
+                                System.out.println("Lbl cop");
+                                label.setOpaque(true);                    // necessário para a cor de fundo aparecer
+                                label.setBackground(COLOR_DEFAULT);
+                                label.setForeground(COLOR_DARK);
+                                label.setFont(fonteLblOp);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -177,6 +195,24 @@ public class Tema {
                     field.setBackground(COLOR_WHITE);
                     field.setForeground(COLOR_DARK);
                     field.setFont(font_desktop);
+                }
+
+                Font fonteLblOp = new Font("Arial", Font.BOLD, 10);
+                if (container instanceof Container subContainer && "pn_lateral".equals(container.getName())) {
+                    System.out.println("Painel Lateral");
+                    Component[] filhos_pn_lateral = subContainer.getComponents();
+                    for (Component neto : filhos_pn_lateral) {
+                        //Entrando nos Labels/Components do Painel Superior
+                        if (neto instanceof JLabel label) {
+                            if ("lbl_cop".equals(label.getName())) {
+                                System.out.println("Lbl cop");
+                                label.setOpaque(true);                    // necessário para a cor de fundo aparecer
+                                label.setBackground(COLOR_DARK);
+                                label.setForeground(COLOR_WHITE);
+                                label.setFont(fonteLblOp);
+                            }
+                        }
+                    }
                 }
             }
         }

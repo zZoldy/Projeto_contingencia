@@ -122,7 +122,7 @@ public class Config {
             }
             writer.println();
 
-            Funcoes.open_file_desktop(destino);
+            Funcoes.open_file_desktop(null, destino);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

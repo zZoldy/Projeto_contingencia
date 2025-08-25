@@ -501,8 +501,8 @@ public class Funcoes {
     }
 
     // Caixa de Mensagem Interface
-    public static void message_error(String msg) {
-        JOptionPane.showMessageDialog(null, msg, "Erro", JOptionPane.ERROR_MESSAGE);
+    public static void message_error(Component parent, String msg) {
+        JOptionPane.showMessageDialog(parent, msg, "Erro", JOptionPane.ERROR_MESSAGE);
     }
 
     public static boolean message_confirm(Component parent, String mensagem, String titulo) {
@@ -527,7 +527,7 @@ public class Funcoes {
 
         // Mostrando o JOptionPane com a combo
         int result = JOptionPane.showConfirmDialog(
-                null,
+                parent,
                 comboBox,
                 "Selecione uma opção",
                 JOptionPane.OK_CANCEL_OPTION,
@@ -548,7 +548,7 @@ public class Funcoes {
     }
 
     //
-    public static void open_file_desktop(File file) {
+    public static void open_file_desktop(Component parent, File file) {
         try {
             Thread.sleep(1000);
             // Tenta abrir o arquivo com o aplicativo padrão do sistema
@@ -558,7 +558,7 @@ public class Funcoes {
                 System.out.println("Abertura automática não suportada neste sistema.");
             }
         } catch (IOException | InterruptedException e) {
-            message_error("Erro ao abrir arquivo: " + file.getName());
+            message_error(parent, "Erro ao abrir arquivo: " + file.getName());
         }
     }
 
